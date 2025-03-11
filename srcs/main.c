@@ -20,11 +20,32 @@
 */
 // usleep : 1000000 es un segundo (1/1000000 micro segundo!)
 
+/*
+para el proyecto:
+
+en Philosophers necesitas un main que haga varias cosas:
+
+    Parsear los argumentos (número de filósofos, tiempo para morir, comer, dormir, etc.).
+    Inicializar las estructuras necesarias (filósofos, mutex para los tenedores, etc.).
+    Crear los hilos de los filósofos.
+    Supervisar la ejecución y verificar si algún filósofo muere.
+    Liberar memoria al final.
+
+*/
+
+
 #include <unistd.h>
 #include <stdio.h>
 
+int gettimeofday()
+{
+
+}
+
 int main(void)
 {
-	printf("value de usleep: %d", usleep(100000000));
+	printf("value de usleep: %d", usleep(1000000));
+
+
   return (0);
 }
