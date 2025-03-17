@@ -1,9 +1,9 @@
-NAME = philosophers
+NAME = philo
 
 CC = cc
 
 #CFLAGS	 =	-Wextra -Wall -Werror -Wunreachable-code
-CFLAGS	+= -I inc
+CFLAGS	+= -I incl
 CFLAGS	+= -I libft
 CFLAGS	+= -O3
 
@@ -19,8 +19,9 @@ HEADERS = -I ./inc -I $(LIBFT)
 LIBS	+=	$(LIBFT)/libft.a
 
 
-SRCS =											\
-		srcs/main.c
+SRCS =					\
+		srcs/main.c		\
+		srcs/parser.c	\
 
 
 
