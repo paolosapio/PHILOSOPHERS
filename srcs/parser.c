@@ -16,8 +16,18 @@ int traductor_char_to_token(char c)
 		return (2);
 	return (0);
 }
-
-int get_state(int )
+// -123p
+int get_state(int current_state, int token)
+{
+	const int matrix[][4] = {
+		{1, 1, 2}, // 0 estado inicial
+		{1, 1, 1}, // 1 estado err
+		{1, 0, 0}, // 2 estado + err
+		{1, 0, 0} // 3 estado n OK
+	};//err + n
+	  // 0  1 2
+	return (matrix[current_state][token]);
+}
 
 int evaluate_string(char *str)
 {
