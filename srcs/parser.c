@@ -1,8 +1,8 @@
 #include "philo.h"
 
-int	ft_isdigit(int c)
+int	philo_isdigit(int c)
 {
-	if ((c >= '0') && (c <= '9'))
+	if ((c > '0') && (c <= '9'))
 		return (1);
 	else
 		return (0);
@@ -12,21 +12,25 @@ int traductor_char_to_token(char c)
 {
 	if (c == '+')
 		return (1);
-	if (ft_isdigit(c) == 1)
+	if (philo_isdigit(c) == 1)
 		return (2);
 	return (0);
 }
-// -123p
-int get_state(int current_state, int token)
+
+// install image_comment extension to see de image belove:
+// https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
+// [../TO_IGNORE_reference_image/grafo_automata.png]
+// exeple arg: 123+
+int get_state(int current_state, int token_char)
 {
 	const int matrix[][4] = {
-		{1, 1, 2}, // 0 estado inicial
+		{1, 2, 3}, // 0 estado inicial
 		{1, 1, 1}, // 1 estado err
-		{1, 0, 0}, // 2 estado + err
-		{1, 0, 0} // 3 estado n OK
+		{1, 1, 3}, // 2 estado + NO ACEPTACION
+		{1, 1, 3}  // 3 estado n OK
 	};//err + n
 	  // 0  1 2
-	return (matrix[current_state][token]);
+	return (matrix[current_state][token_char]);
 }
 
 int evaluate_string(char *str)
@@ -44,7 +48,7 @@ int evaluate_string(char *str)
 		i++;
 	}
 	if (state != 3)
-		printf("Error: invalid input->%s\n", str);
+		printf("Error, invalid input: %s\n", str);
 	return (0);
 }
 
@@ -60,9 +64,6 @@ int parser(int argc, char **argv)
 	}
 	return (0); 
 }
-
-
-
 
 /* 
 int	get_state(int current_state, int token_char)

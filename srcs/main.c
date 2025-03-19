@@ -8,11 +8,17 @@
 //! TIEMPO DE VIDA
 //! TIEMPO PARA COMER
 //! TIEMPO PARA DORMIR
+//! (OPCIONAL) NUMERO DE PLATOS MINIMO QUE TIENE QUE COMER CADA FILOSOFO
 
 int main(int argc, char** argv)
 {
-	if (parser(argc, argv) != 0)
-		return (1);
+	if (argc == 5 || argc == 6)
+	{
+		if (parser(argc, argv) != 0)
+			return (1);
+	}
+	else
+		printf("Error: invalid number of arguments\n");
 	return (0);
 }
 
