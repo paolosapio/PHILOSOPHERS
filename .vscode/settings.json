@@ -2,6 +2,7 @@
 	"files.associations": {
 		"unistd.h": "c",
 		"stdio.h": "c",
-		"*.png": "c"
+		"*.png": "c",
+		"philo.h": "c"
 	}
 }

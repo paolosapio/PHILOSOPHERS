@@ -1,21 +1,28 @@
 #include "philo.h"
 
 
-// EJEMPLO ARGS
-// ./philosophers 7 1000 500 
 
-//! CONTROLAR NUMERO DE FILOSOFOS
-//! TIEMPO DE VIDA
-//! TIEMPO PARA COMER
-//! TIEMPO PARA DORMIR
-//! (OPCIONAL) NUMERO DE PLATOS MINIMO QUE TIENE QUE COMER CADA FILOSOFO
 
-int main(int argc, char** argv)
+
+
+
+
+
+
+
+
+
+
+
+int main(int argc, char **argv)
 {
+	t_data_pack *d_pack;
+
 	if (argc == 5 || argc == 6)
 	{
 		if (parser(argc, argv) != 0)
 			return (1);
+		d_pack = init_data(argc, argv);
 	}
 	else
 		printf("Error: invalid number of arguments\n");
@@ -25,6 +32,33 @@ int main(int argc, char** argv)
 
 
 
+/* int main(int argc, char** argv)
+{
+	t_philo	*current_philo;
+
+	current_philo = data->list_of_philosophers;
+
+	while (current->id_philo )
+
+	pthread_create(&hilo1, NULL, funcion_espera_hilo1, NULL);
+	pthread_create(&hilo2, NULL, funcion_espera_hilo2, NULL);
+
+	pthread_join(hilo1, NULL);
+	pthread_join(hilo2, NULL);
+
+	return (0);
+ 	struct timeval tv;
+ 	int	n_fork_n_philo;
+
+	if (gettimeofday(&tv, NULL) == -1)
+	{
+		perror("gettimeofday failed");
+		return 1;
+	}
+
+	printf("Segundos: %ld\n", tv.tv_sec);
+	printf("Microsegundos: %ld\n", tv.tv_usec);
+}  */
 
 
 
