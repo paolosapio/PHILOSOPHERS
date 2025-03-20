@@ -19,9 +19,12 @@ HEADERS = -I ./inc -I $(LIBFT)
 LIBS	+=	$(LIBFT)/libft.a
 
 
-SRCS =					\
-		srcs/main.c		\
-		srcs/parser.c	\
+SRCS =							\
+		srcs/main.c				\
+		srcs/parser.c			\
+		srcs/utils.c			\
+		srcs/init.c				\
+		srcs/list_philo.c		\
 
 
 

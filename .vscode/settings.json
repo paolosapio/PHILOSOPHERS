@@ -3,6 +3,10 @@
 		"unistd.h": "c",
 		"stdio.h": "c",
 		"*.png": "c",
-		"philo.h": "c"
+		"philo.h": "c",
+		"pthread.h": "c",
+		"stdlib.h": "c",
+		"time.h": "c",
+		"type_traits": "c"
 	}
 }

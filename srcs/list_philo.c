@@ -1,36 +1,32 @@
 
 #include "philo.h"
 
-
-t_philo	*new_philo(t_token_value type, char *str, int length)
+void ft_lstadd_back(t_philo **lst, t_philo *new)
 {
-	t_philo *new_philo;
-
-	new_philo = (t_philo *) ft_calloc(sizeof(t_philo), 1);
-	if (!new_philo)
-		return (NULL);
-	new_philo->next = NULL;
-	return (new_philo);
-}
-
-/**
- * add_token_back receives the head of the list and the new token
- * to add at the end of said list. If there is no head, new becomes it.
- */
-void	add_token_back(t_token **lst, t_token *new)
-{
-	t_token	*temp;
+	t_philo *head_aux;
 
 	if (*lst == NULL)
 	{
 		*lst = new;
-		new->next = NULL;
+		return ;
 	}
-	else
+	head_aux = *lst;
+	while (head_aux->next)
 	{
-		temp = *lst;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new;
+		head_aux = head_aux->next;
 	}
+	head_aux->next = new;
+}
+
+t_philo *ft_lstnew(int id)
+{
+	t_philo *node;
+
+	node = malloc(sizeof(t_philo));
+	node->id_philo = id;
+	node->last_meal = 0;
+	// node->id_thread = NULL;
+	node->next = NULL;
+
+	return (node);
 }

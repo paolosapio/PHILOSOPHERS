@@ -1,62 +1,28 @@
 #include "philo.h"
 
-static void ft_lstadd_back(t_list **lst, t_list *new)
+
+
+t_philo	*init_list_philo(t_data_pack *data)
 {
-	t_list *head_aux;
-
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	head_aux = *lst;
-	while (head_aux->next)
-	{
-		head_aux = head_aux->next;
-	}
-	head_aux->next = new;
-}
-
-static t_philo *ft_lstnew(void)
-{
-	t_philo *node;
-	node = malloc(sizeof(t_philo));
-
-	node->id_philo = 1;
-	
-	node->last_meal = 0;
-	node->id_thread = NULL;
-	node->next = NULL;
-
-	return (node);
-}
-
-void	init_list_philo(t_philo *firt_node, t_data_pack *data)
-{
-	t_philo	*first;
 	t_philo *head_list;
 	t_philo *node;
-	int i;
+	int id;
 
-	i = 1;
+	id = 1;
 	head_list = NULL;
-	while (i <= data->n_philos)
+	while (id <= data->n_philos)
 	{
-			
-		node = malloc(sizeof(t_philo));
-		node->id_philo = i;
-		node->last_meal = 0;
+		node = ft_lstnew(id);
+		if (!node)
+			return (NULL);
 		pthread_mutex_init(&node->fork, NULL);
-		node->id_thread = NULL;
+		// node->id_thread = NULL;
 		node->data = data;
 		node->next = NULL;
 		ft_lstadd_back(&head_list, node);
-		if (i == 1)
-			first = node;
-		i++;
+		id++;
 	}
-	node->next = first;
-	return (first);
+	return (head_list);
 }
 
 t_data_pack *init_data(int argc, char **argv)
@@ -70,8 +36,7 @@ t_data_pack *init_data(int argc, char **argv)
 	d_pack->time_to_sleep = ft_atol(argv[4]);
 	if (argv[5])
 		d_pack->n_must_eat = ft_atol(argv[5]);
-	d_pack->list_of_philosophers = ft_lstnew();
-	init_list_philo(d_pack->list_of_philosophers, d_pack);
+	init_list_philo(d_pack);
 	return (d_pack);
 }
 

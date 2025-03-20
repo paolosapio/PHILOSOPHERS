@@ -1,19 +1,7 @@
 #include "philo.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// EJEMPLO ARGS
+// ./philo 7 1000 500 52 3
 int main(int argc, char **argv)
 {
 	t_data_pack *d_pack;
@@ -28,6 +16,48 @@ int main(int argc, char **argv)
 		printf("Error: invalid number of arguments\n");
 	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -59,6 +89,13 @@ int main(int argc, char **argv)
 	printf("Segundos: %ld\n", tv.tv_sec);
 	printf("Microsegundos: %ld\n", tv.tv_usec);
 }  */
+
+
+
+
+
+
+
 
 
 
