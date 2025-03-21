@@ -3,10 +3,10 @@
 int traductor_char_to_token(char c)
 {
 	if (c == '+')
-		return (1);
+		return (CT___PLUS);
 	if (philo_isdigit(c) == 1)
-		return (2);
-	return (0);
+		return (CT_NUMBER);
+	return (CT__ERROR);
 }
 
 
@@ -15,13 +15,13 @@ int traductor_char_to_token(char c)
 // install image_comment extension to see de image belove:
 // https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
 // [../TO_IGNORE_reference_image/grafo_automata.png]
-int get_state(t_STATE current_state, int token_char)
+int get_state(t_state current_state, int token_char)
 {
-	const t_STATE matrix[][4] = {
-		{eERROR, e_PLUS, NUMBER}, // 0 estado inicial
-		{eERROR, eERROR, eERROR}, // 1 estado eERROR
-		{eERROR, eERROR, NUMBER}, // 2 estado e_PLUS NO ACEPTACION
-		{eERROR, eERROR, NUMBER}  // 3 estado NUMBER OK
+	const t_state matrix[][4] = {
+		{ST___ERROR, ST____PLUS, ST__NUMBER}, // 0 estado inicial
+		{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
+		{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
+		{ST___ERROR, ST___ERROR, ST__NUMBER}  // 3 estado ST__NUMBER OK
 	};//   err		+ 		n
 	  //    0		1 		2
 	return (matrix[current_state][token_char]);
@@ -33,7 +33,7 @@ int evaluate_string(char *str)
 	int state;
 	int i;
 
-	state = 0;
+	state = ST_INICIAL;
 	i = 0;
 	while (str[i])
 	{
@@ -41,23 +41,24 @@ int evaluate_string(char *str)
 		state = get_state(state, token_char);
 		i++;
 	}
-	if (state != 3)
+	if (state != ST__NUMBER)
 	{
 		printf("Error, invalid input: %s\n", str);
-		return (-1);
+		return (ST___ERROR);
 	}
 	return (0);
 }
 
 int parser(int argc, char **argv)
 {
+	(void)argc;
 	int i;
 
 	i = 1;
 	while (argv[i])
 	{
 		if (evaluate_string(argv[i]) != 0)
-			return (-1);
+			return (ST___ERROR);
 		i++;
 	}
 	return (0); 

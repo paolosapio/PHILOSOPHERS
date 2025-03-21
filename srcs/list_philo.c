@@ -1,4 +1,4 @@
-
+/* 
 #include "philo.h"
 
 void ft_lstadd_back(t_philo **lst, t_philo *new)
@@ -30,3 +30,4 @@ t_philo *ft_lstnew(int id)
 
 	return (node);
 }
+ */

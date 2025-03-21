@@ -1,42 +1,48 @@
 #include "philo.h"
 
-
-
-t_philo	*init_list_philo(t_data_pack *data)
+void	init_philo(int id, t_data_pack *data)
 {
-	t_philo *head_list;
-	t_philo *node;
+	t_philo philo;
+	int i;
+
+	i = 0;
+	philo.id_philo = id;
+	philo.last_meal = 0;
+	pthread_mutex_init(&philo.fork, NULL);
+	(void)philo.id_thread;
+	philo.data = data;
+	data->array_of_philosophers[i] = philo;
+}
+
+void	*init_array_philo(t_data_pack *data)
+{
 	int id;
 
 	id = 1;
-	head_list = NULL;
+	data->array_of_philosophers = ft_calloc(sizeof(t_philo), data->n_philos);
+	if (!data->array_of_philosophers)
+		return (NULL);
 	while (id <= data->n_philos)
 	{
-		node = ft_lstnew(id);
-		if (!node)
-			return (NULL);
-		pthread_mutex_init(&node->fork, NULL);
-		// node->id_thread = NULL;
-		node->data = data;
-		node->next = NULL;
-		ft_lstadd_back(&head_list, node);
+		init_philo(id, data);
+	
 		id++;
 	}
-	return (head_list);
+	return (data);
 }
 
-t_data_pack *init_data(int argc, char **argv)
+t_data_pack init_data(int argc, char **argv)
 {
-	t_data_pack *d_pack;
+	(void)argc;
+	t_data_pack d_pack;
 
-	d_pack = ft_calloc(1, sizeof(t_data_pack));
-	d_pack->n_philos = ft_atol(argv[1]);
-	d_pack->time_to_die = ft_atol(argv[2]);
-	d_pack->time_to_eat = ft_atol(argv[3]);
-	d_pack->time_to_sleep = ft_atol(argv[4]);
-	if (argv[5])
-		d_pack->n_must_eat = ft_atol(argv[5]);
-	init_list_philo(d_pack);
+	d_pack.n_philos = ft_atol(argv[INFO_PH_N_FILOS]);
+	d_pack.time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);
+	d_pack.time_to_eat = ft_atol(argv[INFO_PH_TIME_EAT]);
+	d_pack.time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
+	if (argv[INFO_PH_N_PLATES])
+		d_pack.n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
+	init_array_philo(&d_pack);
 	return (d_pack);
 }
 

@@ -2,7 +2,7 @@ NAME = philo
 
 CC = cc
 
-#CFLAGS	 =	-Wextra -Wall -Werror -Wunreachable-code
+CFLAGS	 =	-Wextra -Wall -Werror #-Wunreachable-code
 CFLAGS	+= -I incl
 CFLAGS	+= -I libft
 CFLAGS	+= -O3

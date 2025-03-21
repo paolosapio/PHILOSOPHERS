@@ -4,58 +4,19 @@
 // ./philo 7 1000 500 52 3
 int main(int argc, char **argv)
 {
-	t_data_pack *d_pack;
+	t_data_pack d_pack;
 
 	if (argc == 5 || argc == 6)
 	{
-		if (parser(argc, argv) != 0)
-			return (1);
+		if (parser(argc, argv) == ST___ERROR)
+			return (ST___ERROR);
 		d_pack = init_data(argc, argv);
 	}
 	else
 		printf("Error: invalid number of arguments\n");
 	return (0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 

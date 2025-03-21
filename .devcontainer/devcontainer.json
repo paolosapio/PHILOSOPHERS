@@ -1,0 +1,14 @@
+{
+    "name": "C Development Box",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/zsh"
+    },
+    "extensions": [
+        "ms-vscode.cpptools",
+        "DoKca.42-ft-count-line"
+    ],
+    "postCreateCommand": "chsh -s $(which zsh)"
+}
