@@ -1,51 +1,58 @@
 #include "philo.h"
 
-void	init_philo(int id, t_data_pack *data)
+int	init_array_forks(t_data_pack *data)
 {
-	t_philo philo;
-	int i;
+	
+	long i;
 
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_philos);
+	if(!data->forks)
+		return (-1);
 	i = 0;
-	philo.id_philo = id;
-	philo.last_meal = 0;
-	pthread_mutex_init(&philo.fork, NULL);
-	(void)philo.id_thread;
-	philo.data = data;
-	data->array_of_philosophers[i] = philo;
+	while(i < data->n_philos)
+	{
+		pthread_mutex_init(&data->forks[i], NULL);
+		i++;
+	}
+	return (0);
 }
 
-void	*init_array_philo(t_data_pack *data)
+int	init_array_philo(t_data_pack *data)
 {
 	int id;
 
-	id = 1;
 	data->array_of_philosophers = ft_calloc(sizeof(t_philo), data->n_philos);
 	if (!data->array_of_philosophers)
-		return (NULL);
+		return (-1);
+	id = 1;
 	while (id <= data->n_philos)
 	{
-		init_philo(id, data);
-	
+		data->array_of_philosophers[id - 1].id_philo = id;
+		data->array_of_philosophers[id - 1].last_meal = 0;
+		(void)data->array_of_philosophers[id - 1].id_thread;
+		data->array_of_philosophers[id - 1].data = data;
 		id++;
 	}
-	return (data);
+	return (0);
 }
 
-t_data_pack init_data(int argc, char **argv)
+t_data_pack init_data(char **argv)
 {
-	(void)argc;
 	t_data_pack d_pack;
-
+	
+	memset(&d_pack, 0, sizeof(t_data_pack));
 	d_pack.n_philos = ft_atol(argv[INFO_PH_N_FILOS]);
 	d_pack.time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);
 	d_pack.time_to_eat = ft_atol(argv[INFO_PH_TIME_EAT]);
 	d_pack.time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
 	if (argv[INFO_PH_N_PLATES])
 		d_pack.n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
-	init_array_philo(&d_pack);
+	if (init_array_philo(&d_pack) == -1)
+		destroy_data(&d_pack);
+	if (init_array_forks(&d_pack) == -1)
+		destroy_data(&d_pack);
 	return (d_pack);
 }
-
 
 /* 
 t_env	*new_env(char *name, char *value)
@@ -59,4 +66,15 @@ t_env	*new_env(char *name, char *value)
 	new_env->value = value;
 	new_env->next = NULL;
 	return (new_env);
+} */
+
+/* {
+
+	int sub1[] = {0, 1};
+	int sub2[] = {3, 4};
+
+	int *a[2] = {sub1, sub2};
+
+	int *c = &a;
+
 } */

@@ -25,6 +25,8 @@ SRCS =							\
 		srcs/utils.c			\
 		srcs/init.c				\
 		srcs/list_philo.c		\
+		srcs/destroy_data.c		\
+	
 
 
 
@@ -37,7 +39,7 @@ libft:
 	@make -C $(LIBFT)
 
 $(NAME): $(OBJS)
-	$(CC) $(DEBUG) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME) $(READLINE) && printf "Linking: $(NAME)\n"
+	$(CC) $(DEBUG) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME) && printf "Linking: $(NAME)\n"
 
 objs/srcs/%.o: ./srcs/%.c
 	@mkdir -p $(dir $@)

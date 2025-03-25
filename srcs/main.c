@@ -10,18 +10,13 @@ int main(int argc, char **argv)
 	{
 		if (parser(argc, argv) == ST___ERROR)
 			return (ST___ERROR);
-		d_pack = init_data(argc, argv);
+		d_pack = init_data(argv);
+		destroy_data(&d_pack);
 	}
 	else
 		printf("Error: invalid number of arguments\n");
 	return (0);
 }
- 
-
-
-
-
-
 
 /* int main(int argc, char** argv)
 {
@@ -50,31 +45,6 @@ int main(int argc, char **argv)
 	printf("Segundos: %ld\n", tv.tv_sec);
 	printf("Microsegundos: %ld\n", tv.tv_usec);
 }  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

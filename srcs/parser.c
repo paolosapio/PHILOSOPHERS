@@ -4,14 +4,12 @@ int traductor_char_to_token(char c)
 {
 	if (c == '+')
 		return (CT___PLUS);
-	if (philo_isdigit(c) == 1)
+	if (ft_isdigit(c) == 1)
 		return (CT_NUMBER);
 	return (CT__ERROR);
 }
 
-
-
-// exeple arg: 123+
+// exeple arg: 123+ | -200 | 374  caca | ++36 | 35 |
 // install image_comment extension to see de image belove:
 // https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
 // [../TO_IGNORE_reference_image/grafo_automata.png]
@@ -22,8 +20,8 @@ int get_state(t_state current_state, int token_char)
 		{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
 		{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
 		{ST___ERROR, ST___ERROR, ST__NUMBER}  // 3 estado ST__NUMBER OK
-	};//   err		+ 		n
-	  //    0		1 		2
+	};// |  err		|	 + 		|	 n     |
+	  // |    0		|	 1 		|	 2     |
 	return (matrix[current_state][token_char]);
 }
 
@@ -57,7 +55,7 @@ int parser(int argc, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (evaluate_string(argv[i]) != 0)
+		if (evaluate_string(argv[i]) == ST___ERROR)
 			return (ST___ERROR);
 		i++;
 	}

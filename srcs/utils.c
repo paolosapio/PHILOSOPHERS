@@ -48,9 +48,9 @@ void	*ft_calloc(size_t count, size_t size)
 	return (pointer);
 }
 
-int	philo_isdigit(int c)
+int	ft_isdigit(int c)
 {
-	if ((c > '0') && (c <= '9'))
+	if ((c >= '0') && (c <= '9'))
 		return (1);
 	else
 		return (0);
