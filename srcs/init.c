@@ -2,7 +2,6 @@
 
 int	init_array_forks(t_data_pack *data)
 {
-	
 	long i;
 
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_philos);
@@ -31,6 +30,11 @@ int	init_array_philo(t_data_pack *data)
 		data->array_of_philosophers[id - 1].last_meal = 0;
 		(void)data->array_of_philosophers[id - 1].id_thread;
 		data->array_of_philosophers[id - 1].data = data;
+		data->array_of_philosophers[id - 1].fork_left = &data->forks[id - 1];
+		if (id != data->n_philos)
+			data->array_of_philosophers[id - 1].fork_right = &data->forks[id];
+		else
+			data->array_of_philosophers[id - 1].fork_right = &data->forks[0];
 		id++;
 	}
 	return (0);
@@ -47,9 +51,9 @@ t_data_pack init_data(char **argv)
 	d_pack.time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
 	if (argv[INFO_PH_N_PLATES])
 		d_pack.n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
-	if (init_array_philo(&d_pack) == -1)
-		destroy_data(&d_pack);
 	if (init_array_forks(&d_pack) == -1)
+		destroy_data(&d_pack);
+	if (init_array_philo(&d_pack) == -1)
 		destroy_data(&d_pack);
 	return (d_pack);
 }

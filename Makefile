@@ -24,8 +24,8 @@ SRCS =							\
 		srcs/parser.c			\
 		srcs/utils.c			\
 		srcs/init.c				\
-		srcs/list_philo.c		\
 		srcs/destroy_data.c		\
+		srcs/init_philos.c		\
 	
 
 

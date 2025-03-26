@@ -13,6 +13,8 @@ typedef struct s_philo
 	long			last_meal; //comienzo de la ultima comida del filosofo
 	pthread_t		id_thread; //se inicializa con la funcion pthread_create
 	t_data_pack		*data;
+	pthread_mutex_t	*fork_left;
+	pthread_mutex_t	*fork_right;
 }					t_philo;
 
 // structura con todos los datos
@@ -23,8 +25,8 @@ typedef struct s_data_pack
 	long			time_to_eat;	//! TIEMPO PARA COMER
 	long			time_to_sleep;	//! TIEMPO PARA DORMIR
 	long			n_must_eat;		//! (OPCIONAL) NUMERO DE PLATOS MINIMO QUE TIENE QUE COMER CADA FILOSOFO
-	t_philo 		*array_of_philosophers;
 	pthread_mutex_t	*forks;
+	t_philo 		*array_of_philosophers;
 }				t_data_pack;
 
 #endif

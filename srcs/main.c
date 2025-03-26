@@ -11,6 +11,7 @@ int main(int argc, char **argv)
 		if (parser(argc, argv) == ST___ERROR)
 			return (ST___ERROR);
 		d_pack = init_data(argv);
+		init_philos(&d_pack); //pthread_create 
 		destroy_data(&d_pack);
 	}
 	else

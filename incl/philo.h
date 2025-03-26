@@ -8,7 +8,7 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include <stdlib.h>
-#include <string.h>
+# include <string.h>
 
 //FUNCIONES
 
@@ -35,5 +35,9 @@ t_philo		*ft_lstnew(int id);
 
 //destroy_data.c
 void		destroy_data(t_data_pack *data);
+
+//init_philos.c
+void		*print_philo_n(void	*arg);
+void		init_philos(t_data_pack *d_pack);
 
 #endif
