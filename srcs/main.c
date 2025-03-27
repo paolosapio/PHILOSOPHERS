@@ -16,6 +16,7 @@ int main(int argc, char **argv)
 	}
 	else
 		printf("Error: invalid number of arguments\n");
+	wait_ms(200);
 	return (0);
 }
 

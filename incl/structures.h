@@ -9,9 +9,9 @@ typedef struct	s_philo		t_philo;
 // lista de filosofos
 typedef struct s_philo
 {
-	int				id_philo; //! NUMERO IIDENTIFICACION DE FILOSOFOS
-	long			last_meal; //comienzo de la ultima comida del filosofo
-	pthread_t		id_thread; //se inicializa con la funcion pthread_create
+	int				id_philo; 		//! NUMERO IIDENTIFICACION DE FILOSOFOS
+	long			last_meal;		//comienzo de la ultima comida del filosofo o empiezo del programa
+	pthread_t		id_thread;		//se inicializa con la funcion pthread_create
 	t_data_pack		*data;
 	pthread_mutex_t	*fork_left;
 	pthread_mutex_t	*fork_right;
@@ -29,4 +29,7 @@ typedef struct s_data_pack
 	t_philo 		*array_of_philosophers;
 }				t_data_pack;
 
+//time.c
+long    time_ms(void);
+void    wait_ms(long time_wait);
 #endif

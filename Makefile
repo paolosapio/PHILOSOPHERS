@@ -26,7 +26,7 @@ SRCS =							\
 		srcs/init.c				\
 		srcs/destroy_data.c		\
 		srcs/init_philos.c		\
-	
+		srcs/time.c				\
 
 
 

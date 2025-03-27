@@ -31,9 +31,8 @@ int	init_array_philo(t_data_pack *data)
 		(void)data->array_of_philosophers[id - 1].id_thread;
 		data->array_of_philosophers[id - 1].data = data;
 		data->array_of_philosophers[id - 1].fork_left = &data->forks[id - 1];
-		if (id != data->n_philos)
-			data->array_of_philosophers[id - 1].fork_right = &data->forks[id];
-		else
+		data->array_of_philosophers[id - 1].fork_right = &data->forks[id];
+		if (id == data->n_philos)
 			data->array_of_philosophers[id - 1].fork_right = &data->forks[0];
 		id++;
 	}
