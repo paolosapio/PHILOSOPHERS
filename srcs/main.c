@@ -10,15 +10,23 @@ int main(int argc, char **argv)
 	{
 		if (parser(argc, argv) == ST___ERROR)
 			return (ST___ERROR);
-		d_pack = init_data(argv);
+		memset(&d_pack, 0, sizeof(t_data_pack));
+		init_data(&d_pack, argv);
 		init_philos(&d_pack); //pthread_create 
 		destroy_data(&d_pack);
 	}
 	else
+	{
 		printf("Error: invalid number of arguments\n");
-	wait_ms(200);
+		return (1);
+	}
 	return (0);
 }
+
+//todo Los filósofos solo pueden comer, pensar, o dormir.
+//todo Mientras están comiendo, no pueden pensar ni dormir; init_philo
+//todo Mientras están pensando, no pueden dormir ni comer;
+//todo Y, por supuesto, mientras están durmiendo, no pueden comer ni pensar.
 
 /* int main(int argc, char** argv)
 {

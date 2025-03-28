@@ -25,16 +25,16 @@ int			ft_isdigit(int c);
 long		ft_atol(const char *nptr);
 
 //init.c
-t_data_pack init_data(char **argv);
-int			init_array_forks(t_data_pack *data);
-int			init_array_philo(t_data_pack *data);
+void        init_data(t_data_pack *d_pack, char **argv);
+int			init_array_forks(t_data_pack *d_pack);
+int			init_array_philo(t_data_pack *d_pack);
 
 //list_philo.c
 void		ft_lstadd_back(t_philo **lst, t_philo *new);
 t_philo		*ft_lstnew(int id);
 
 //destroy_data.c
-void		destroy_data(t_data_pack *data);
+void		destroy_data(t_data_pack *d_pack);
 
 //init_philos.c
 void		*print_philo_n(void	*arg);

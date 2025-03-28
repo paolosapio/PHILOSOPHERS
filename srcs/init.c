@@ -27,7 +27,7 @@ int	init_array_philo(t_data_pack *data)
 	while (id <= data->n_philos)
 	{
 		data->array_of_philosophers[id - 1].id_philo = id;
-		data->array_of_philosophers[id - 1].last_meal = 0;
+		data->array_of_philosophers[id - 1].last_meal_start = data->timestamp_in_ms;
 		(void)data->array_of_philosophers[id - 1].id_thread;
 		data->array_of_philosophers[id - 1].data = data;
 		data->array_of_philosophers[id - 1].fork_left = &data->forks[id - 1];
@@ -39,22 +39,19 @@ int	init_array_philo(t_data_pack *data)
 	return (0);
 }
 
-t_data_pack init_data(char **argv)
+void	init_data(t_data_pack *d_pack, char **argv)
 {
-	t_data_pack d_pack;
-	
-	memset(&d_pack, 0, sizeof(t_data_pack));
-	d_pack.n_philos = ft_atol(argv[INFO_PH_N_FILOS]);
-	d_pack.time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);
-	d_pack.time_to_eat = ft_atol(argv[INFO_PH_TIME_EAT]);
-	d_pack.time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
+	d_pack->timestamp_in_ms = time_ms();
+	d_pack->n_philos = ft_atol(argv[INFO_PH_N_FILOS]);
+	d_pack->time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);
+	d_pack->time_to_eat = ft_atol(argv[INFO_PH_TIME_EAT]);
+	d_pack->time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
 	if (argv[INFO_PH_N_PLATES])
-		d_pack.n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
-	if (init_array_forks(&d_pack) == -1)
-		destroy_data(&d_pack);
-	if (init_array_philo(&d_pack) == -1)
-		destroy_data(&d_pack);
-	return (d_pack);
+		d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
+	if (init_array_forks(d_pack) == -1)
+		destroy_data(d_pack);
+	if (init_array_philo(d_pack) == -1)
+		destroy_data(d_pack);
 }
 
 /* 

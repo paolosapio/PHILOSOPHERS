@@ -1,5 +1,12 @@
 #include "philo.h"
 
+long    time_ms(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return ((long)((tv.tv_sec * 1000) + (tv.tv_usec / 1000)));
+}
+
 void    wait_ms(long time_wait)
 {
     const long  time_now = time_ms();
@@ -11,12 +18,6 @@ void    wait_ms(long time_wait)
 	}
 }
 
-long    time_ms(void)
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return ((long)((tv.tv_sec * 1000) + (tv.tv_usec / 1000)));
-}
 //  printf("%lu,%lu\n", tv.tv_sec, tv.tv_usec);   IMPRIME TIEMPO DESDE 1970 (EPOC)
 
 //        1.000 milisegundos  son 1 segundo

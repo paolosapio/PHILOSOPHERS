@@ -20,8 +20,8 @@ int get_state(t_state current_state, int token_char)
 		{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
 		{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
 		{ST___ERROR, ST___ERROR, ST__NUMBER}  // 3 estado ST__NUMBER OK
-	};// |  err		|	 + 		|	 n     |
-	  // |    0		|	 1 		|	 2     |
+	};// |   err	|	  + 	|	 n     |
+	  // |    0		|	  1 	|	 2     |
 	return (matrix[current_state][token_char]);
 }
 
