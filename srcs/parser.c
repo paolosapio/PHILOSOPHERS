@@ -9,7 +9,9 @@ int traductor_char_to_token(char c)
 	return (CT__ERROR);
 }
 
-// exeple arg: 123+ | -200 | 374  caca | ++36 | 35 |
+
+
+//! exeple arg: 123+ | -200 | 374  caca | ++36 | 35 |
 // install image_comment extension to see de image belove:
 // https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
 // [../TO_IGNORE_reference_image/grafo_automata.png]
@@ -24,6 +26,7 @@ int get_state(t_state current_state, int token_char)
 	  // |    0		|	  1 	|	 2     |
 	return (matrix[current_state][token_char]);
 }
+
 
 int evaluate_string(char *str)
 {

@@ -12,25 +12,20 @@ typedef struct s_philo
 	int				id_philo; 		 //! NUMERO IIDENTIFICACION DE FILOSOFOS
 	long			last_meal_start; //comienzo de la ultima comida del filosofo o empiezo del programa
 	pthread_t		id_thread;		 //se inicializa con la funcion pthread_create
-	t_config		*config;
+	t_data_pack		*data;
 	pthread_mutex_t	*fork_left;
 	pthread_mutex_t	*fork_right;
 }					t_philo;
 
-typedef struct s_config
+// structura con todos los datos
+typedef struct s_data_pack
 {
 	long			time_to_die;	//! TIEMPO DE VIDA
 	long			time_to_eat;	//! TIEMPO PARA COMER
 	long			time_to_sleep;	//! TIEMPO PARA DORMIR
 	long			n_must_eat;		//! (OPCIONAL) NUMERO DE PLATOS MINIMO QUE TIENE QUE COMER CADA FILOSOFO
-}				t_config;
-
-// structura con todos los datos
-typedef struct s_data_pack
-{
 	long			timestamp_in_ms;//! TIEMPO DE EMPIEZO DEL PROGRAMA
 	long			n_philos;		//! NUMERO TOTAL DE FILOSOFOS
-	t_config		*config;
 	pthread_mutex_t	*forks;
 	t_philo 		*array_of_philosophers;
 }				t_data_pack;
@@ -39,6 +34,9 @@ typedef struct s_data_pack
 long    time_ms(void);
 void    wait_ms(long time_wait);
 #endif
+
+
+// crear una estructura data para que los filosofos no sea raggiungibili da data
 
 
 /* 
