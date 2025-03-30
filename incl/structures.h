@@ -30,9 +30,7 @@ typedef struct s_data_pack
 	t_philo 		*array_of_philosophers;
 }				t_data_pack;
 
-//time.c
-long    time_ms(void);
-void    wait_ms(long time_wait);
+
 #endif
 
 

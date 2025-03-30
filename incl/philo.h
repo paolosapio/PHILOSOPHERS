@@ -4,11 +4,15 @@
 # include "enum.h"
 # include "structures.h"
 
+# include <stdbool.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
 # include <stdlib.h>
 # include <string.h>
+
+# define LIVE true
+# define DEAD false
 
 //FUNCIONES
 
@@ -39,5 +43,11 @@ void		destroy_data(t_data_pack *d_pack);
 //init_philos.c
 void		*print_philo_n(void	*arg);
 void		init_philos(t_data_pack *d_pack);
+
+//time.c
+long    time_ms(void);
+bool    wait_ms_and_check_life(long time_wait, t_philo	*philo);
+bool	is_philo_live(t_philo	*philo);
+long	time_diff(long timestamp_in_ms);
 
 #endif

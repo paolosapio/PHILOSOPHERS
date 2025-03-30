@@ -22,44 +22,81 @@ imprimes su muerte.
 
 */
 
-long	time_diff(long timestamp_in_ms)
-{
-	return (time_ms() - timestamp_in_ms);
-}
-void	comer(t_philo	*philo)
+bool	philo_eat(t_philo	*philo)
 {	
+	if (is_philo_live(philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀 is DEAD BEFORE EATING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		return (DEAD);
+	}
 	pthread_mutex_lock(philo->fork_left);
-	printf("[%5ld] [%3d] has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 	
-	if (philo->fork_right == philo->fork_left)
-		return ;
+	if (is_philo_live(philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀𐂐 is DEAD AFTER taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		pthread_mutex_unlock(philo->fork_left);
+		return (DEAD);
+	}
+	printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	
+	// if (philo->fork_right == philo->fork_left) //solo si hay un filosofo
+	// {
+	// 	pthread_mutex_unlock(philo->fork_left);
+	// 	return (DEAD);
+	// }
 	pthread_mutex_lock(philo->fork_right);
-	printf("[%5ld] [%3d] has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	if (is_philo_live(philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀𐂐 is DEAD AFTER taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		pthread_mutex_unlock(philo->fork_left);
+		pthread_mutex_unlock(philo->fork_right);
+		return (DEAD);
+	}
+	printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 	
+	printf("\nTIEMPO DESDE LA ULTIMA COMIDA:%lu\n\n", time_ms()- philo->last_meal_start);
+
 	philo->last_meal_start =  time_ms();
-	printf("[%5ld] [%3d] is eating\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	printf("[%5ld] [%3d] 🍝 is eating\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 	
-	wait_ms(philo->data->time_to_eat);
+	if(wait_ms_and_check_life(philo->data->time_to_eat, philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀 is DEAD EATING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		pthread_mutex_unlock(philo->fork_left);
+		pthread_mutex_unlock(philo->fork_right);
+		return (DEAD);
+	}
 
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
-
+	return (LIVE);
 }
 //! EJEMPLO ARGS:
-//! ./philo | 7                      | 1000        | 500         | 52            | 3
+//! ./philo | 4                      | 100         | 200         | 100           | 0
 //! ./philo | number_of_philosophers | time_to_die | time_to_eat | time_to_sleep | [number_of_times_each_philosopher_must_eat]
-
-void	dormir(t_philo	*philo)
-{
+//!								     ( time_de_vida)
+bool	philo_sleep(t_philo	*philo)
+{	
+	if (is_philo_live(philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀 is DEAD BEFORE SLEEPING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		return (DEAD);
+	}
 	// ◦ timestamp_in_ms X is sleeping
-	printf("[%5ld] [%3d] is sleeping\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-	wait_ms(philo->data->time_to_sleep);
+	printf("[%5ld] [%3d] 💤 is sleeping\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	if (wait_ms_and_check_life(philo->data->time_to_sleep, philo) == DEAD)
+	{
+		printf("[%5ld] [%3d] 💀 is DEAD SLEEPING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		return (DEAD);
+	}
+	return (LIVE);
 }
 
-void	pensar(t_philo	*philo)
+bool	philo_think(t_philo	*philo)
 {
-	printf("[%5ld] [%3d] is thinking\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	printf("[%5ld] [%3d] 💡 is thinking\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 	// ◦ timestamp_in_ms X is thinking
+	return (LIVE);
 }
 
 // ◦ timestamp_in_ms X died
@@ -70,11 +107,23 @@ void *philo_life(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo*)arg;
-
-	comer(philo);
-	dormir(philo);
-	// pensar(philo);
-	return  (NULL);
+	philo->last_meal_start = time_ms();
+	while(1)
+	{
+		if (philo_eat(philo) == DEAD)
+		{
+			return ((void *)DEAD);
+		}
+		if (philo_sleep(philo) == DEAD)
+		{
+			return ((void *)DEAD);
+		}
+		if (philo_think(philo) == DEAD)
+		{
+			return ((void *)DEAD);
+		}
+	}
+	return (NULL);
 }
 // usleep(10000 * philo->id_philo);
 // printf("Philo nº%d sitting\n", philo->id_philo);
