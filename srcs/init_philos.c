@@ -24,36 +24,23 @@ imprimes su muerte.
 
 bool	philo_eat(t_philo	*philo)
 {	
-	if (is_philo_live(philo) == DEAD)
-	{
-		printf("[%5ld] [%3d] 💀 is DEAD BEFORE EATING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-		return (DEAD);
-	}
-	pthread_mutex_lock(philo->fork_left);
-	
-	if (is_philo_live(philo) == DEAD)
-	{
-		printf("[%5ld] [%3d] 💀𐂐 is DEAD AFTER taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-		pthread_mutex_unlock(philo->fork_left);
-		return (DEAD);
-	}
-	printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-	
-	// if (philo->fork_right == philo->fork_left) //solo si hay un filosofo
-	// {
-	// 	pthread_mutex_unlock(philo->fork_left);
-	// 	return (DEAD);
-	// }
-	pthread_mutex_lock(philo->fork_right);
-	if (is_philo_live(philo) == DEAD)
-	{
-		printf("[%5ld] [%3d] 💀𐂐 is DEAD AFTER taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-		pthread_mutex_unlock(philo->fork_left);
-		pthread_mutex_unlock(philo->fork_right);
-		return (DEAD);
-	}
-	printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-	
+	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+		pthread_mutex_lock(philo->fork_left);
+	else
+		pthread_mutex_lock(philo->fork_right);
+	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+		printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	else
+		printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+
+	if (philo->id_philo % 2 != 0)
+		pthread_mutex_lock(philo->fork_right);
+	else
+		pthread_mutex_lock(philo->fork_left);
+	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+		printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	else
+		printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);	
 	printf("\nTIEMPO DESDE LA ULTIMA COMIDA:%lu\n\n", time_ms()- philo->last_meal_start);
 
 	philo->last_meal_start =  time_ms();
@@ -66,9 +53,8 @@ bool	philo_eat(t_philo	*philo)
 		pthread_mutex_unlock(philo->fork_right);
 		return (DEAD);
 	}
-
-	pthread_mutex_unlock(philo->fork_left);
-	pthread_mutex_unlock(philo->fork_right);
+		pthread_mutex_unlock(philo->fork_left);
+		pthread_mutex_unlock(philo->fork_right);
 	return (LIVE);
 }
 //! EJEMPLO ARGS:
@@ -77,12 +63,7 @@ bool	philo_eat(t_philo	*philo)
 //!								     ( time_de_vida)
 bool	philo_sleep(t_philo	*philo)
 {	
-	if (is_philo_live(philo) == DEAD)
-	{
-		printf("[%5ld] [%3d] 💀 is DEAD BEFORE SLEEPING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-		return (DEAD);
-	}
-	// ◦ timestamp_in_ms X is sleeping
+	 // ◦ timestamp_in_ms X is sleeping
 	printf("[%5ld] [%3d] 💤 is sleeping\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 	if (wait_ms_and_check_life(philo->data->time_to_sleep, philo) == DEAD)
 	{
@@ -128,6 +109,22 @@ void *philo_life(void *arg)
 // usleep(10000 * philo->id_philo);
 // printf("Philo nº%d sitting\n", philo->id_philo);
 
+void *philo_monitoring(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo*)arg;
+	while (1)
+	{
+		usleep(1000);
+		if (is_philo_live(philo) == DEAD)
+		{
+			printf("[%5ld] [%3d] 💀💻 is DEAD IN MONITORING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+			return (DEAD);
+		}
+	}
+}
+
 void	init_philos(t_data_pack *d_pack)
 {
 	long	i;
@@ -136,12 +133,14 @@ void	init_philos(t_data_pack *d_pack)
 	while (i < d_pack->n_philos)
 	{
 		pthread_create(&d_pack->array_of_philosophers[i].id_thread, NULL, philo_life, &d_pack->array_of_philosophers[i]);
+		pthread_create(&d_pack->array_of_philosophers[i].id_thread_monitoring, NULL, philo_monitoring, &d_pack->array_of_philosophers[i]);
 		i++;
 	}
 	i = 0;
 	while (i < d_pack->n_philos)
 	{
 		pthread_join(d_pack->array_of_philosophers[i].id_thread, NULL);
+		pthread_join(d_pack->array_of_philosophers[i].id_thread_monitoring, NULL);
 		i++;
 	}
 

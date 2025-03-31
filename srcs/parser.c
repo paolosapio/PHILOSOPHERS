@@ -15,6 +15,7 @@ int traductor_char_to_token(char c)
 // install image_comment extension to see de image belove:
 // https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
 // [../TO_IGNORE_reference_image/grafo_automata.png]
+// [../TO_IGNORE_reference_image/nature.jpg]
 int get_state(t_state current_state, int token_char)
 {
 	const t_state matrix[][4] = {

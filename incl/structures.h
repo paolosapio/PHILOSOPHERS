@@ -12,6 +12,7 @@ typedef struct s_philo
 	int				id_philo; 		 //! NUMERO IIDENTIFICACION DE FILOSOFOS
 	long			last_meal_start; //comienzo de la ultima comida del filosofo o empiezo del programa
 	pthread_t		id_thread;		 //se inicializa con la funcion pthread_create
+	pthread_t		id_thread_monitoring;		 //se inicializa con la funcion pthread_create
 	t_data_pack		*data;
 	pthread_mutex_t	*fork_left;
 	pthread_mutex_t	*fork_right;
