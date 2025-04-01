@@ -128,6 +128,7 @@ void *philo_monitoring(void *arg)
 
 void	init_philos(t_data_pack *d_pack)
 {
+	
 	long	i;
 
 	i = 0;
