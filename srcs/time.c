@@ -22,6 +22,7 @@ bool	is_philo_live(t_philo	*philo)
 {
 	if (time_diff(philo->last_meal_start) > philo->data->time_to_die)
 	{
+		print_state("💀 is DEAD", philo);
 		philo->data->is_dead = true;
 		return (DEAD);
 	}
@@ -34,10 +35,11 @@ bool    wait_ms_and_check_life(long time_wait, t_philo	*philo)
 	const long  time_end = time_now + time_wait;
 	while (1)
 	{
-		if (is_philo_live(philo) == DEAD)
+		if (is_philo_live(philo) == DEAD || philo->data->is_dead)
 			return (DEAD);
 		if (time_ms() >= time_end)
 			break ;
+		usleep(100);
 	}
 	return (LIVE);
 }

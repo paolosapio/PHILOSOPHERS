@@ -22,52 +22,49 @@ imprimes su muerte.
 
 */
 
-#define FORK_LEFT	"𐂐 has taken a fork L"
-#define FORK_RIGHT	"𐂐 has taken a fork R"
+#define FORK_LEFT	"🔱 has taken a fork L"
+#define FORK_RIGHT	"🔱 has taken a fork R"
 #define EATING		"🍝 is eating"
 #define SLEEPING	"💤 is sleeping"
 #define THINKING	"💡 is thinking"
 
 void print_state(char *str, t_philo *philo)
 {
-	// if (philo->data->is_dead == true)
-	// 	return ;	
-	printf("[%5ld] [%3d]  %s\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo, str);
+	//poner mutex para que no se cuelen dos hilos en la impressora
+	if (philo->data->is_dead == true)
+		return ;	
+	printf("[%5ld] [%3d] %s\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo, str);
 }
 
-bool	philo_eat(t_philo	*philo)
+void	philo_eat(t_philo *philo)
 {
 	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+	{
 		pthread_mutex_lock(philo->fork_left);
-	else
-		pthread_mutex_lock(philo->fork_right);
-	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
 		print_state(FORK_LEFT, philo);
+	}
 	else
-		print_state(FORK_RIGHT, philo);
-	if (philo->id_philo % 2 != 0)
+	{
 		pthread_mutex_lock(philo->fork_right);
-	else
-		pthread_mutex_lock(philo->fork_left);
-	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
 		print_state(FORK_RIGHT, philo);
-	else
-		print_state(FORK_LEFT, philo);
-	printf("\nTIEMPO DESDE LA ULTIMA COMIDA:%lu\n\n", time_ms()- philo->last_meal_start);
+	}
 
+	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+	{
+		pthread_mutex_lock(philo->fork_right);
+		print_state(FORK_RIGHT, philo);
+	}	
+	else
+	{
+		pthread_mutex_lock(philo->fork_left);
+		print_state(FORK_LEFT, philo);
+	}
 	philo->last_meal_start =  time_ms();
 	print_state(EATING, philo);
-	
-	if(wait_ms_and_check_life(philo->data->time_to_eat, philo) == DEAD)
-	{
-		print_state("💀 is DEAD EATING", philo);
-		pthread_mutex_unlock(philo->fork_left);
-		pthread_mutex_unlock(philo->fork_right);
-		return (DEAD);
-	}
+	wait_ms_and_check_life(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
-	return (LIVE);
+	return ; //puede ser DEAD or LIVE
 }
 
 //! EJEMPLO ARGS:
@@ -78,12 +75,7 @@ bool	philo_sleep(t_philo	*philo)
 {	
 	 // ◦ timestamp_in_ms X is sleeping
 	print_state(SLEEPING, philo);
-	if (wait_ms_and_check_life(philo->data->time_to_sleep, philo) == DEAD)
-	{
-		print_state("💀 is DEAD SLEEPING", philo);
-		return (DEAD);
-	}
-	return (LIVE);
+	return (wait_ms_and_check_life(philo->data->time_to_sleep, philo));
 }
 
 bool	philo_think(t_philo	*philo)
@@ -104,26 +96,17 @@ void *philo_life(void *arg)
 	philo->last_meal_start = time_ms();
 	while(1)
 	{
-		if (philo->data->is_dead == true)
-			return (NULL);
-		if (philo_eat(philo) == DEAD)
-		{
+		if (philo->data->is_dead)
 			return ((void *)DEAD);
-		}
-		if (philo->data->is_dead == true)
-			return (NULL);
-		if (philo_sleep(philo) == DEAD)
-		{
+		philo_eat(philo);
+		if (philo->data->is_dead)
 			return ((void *)DEAD);
-		}
-		if (philo->data->is_dead == true)
-			return (NULL);
-		if (philo_think(philo) == DEAD)
-		{
+		philo_sleep(philo);
+		if (philo->data->is_dead)
 			return ((void *)DEAD);
-		}
+		philo_think(philo);
 	}
-	return (NULL);
+	return ((void *)DEAD);
 }
 // usleep(10000 * philo->id_philo);
 // printf("Philo nº%d sitting\n", philo->id_philo);
@@ -135,14 +118,11 @@ void *philo_monitoring(void *arg)
 	philo = (t_philo*)arg;
 	while (1)
 	{
-		if (is_philo_live(philo) == DEAD)
-		{
-			if (philo->data->is_dead == true)
-				printf("[%5ld] [%3d] 💀💻 is DEAD IN MONITORING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		if (philo->data->is_dead)
 			return (DEAD);
-		}
-
-		usleep(1000);
+		if (is_philo_live(philo) == DEAD)
+			return (DEAD);
+		usleep(100);
 	}
 }
 

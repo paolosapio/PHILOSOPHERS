@@ -43,6 +43,7 @@ void		destroy_data(t_data_pack *d_pack);
 //init_philos.c
 void		*print_philo_n(void	*arg);
 void		init_philos(t_data_pack *d_pack);
+void print_state(char *str, t_philo *philo);
 
 //time.c
 long    time_ms(void);
