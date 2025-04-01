@@ -2,6 +2,7 @@
 # define STRUCTURES_H
 
 # include <pthread.h>
+# include <stdbool.h>
 
 typedef struct	s_data_pack	t_data_pack;
 typedef struct	s_philo		t_philo;
@@ -21,6 +22,7 @@ typedef struct s_philo
 // structura con todos los datos
 typedef struct s_data_pack
 {
+	bool			is_dead;
 	long			time_to_die;	//! TIEMPO DE VIDA
 	long			time_to_eat;	//! TIEMPO PARA COMER
 	long			time_to_sleep;	//! TIEMPO PARA DORMIR

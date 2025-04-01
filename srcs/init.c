@@ -41,6 +41,7 @@ int	init_array_philo(t_data_pack *data)
 
 void	init_data(t_data_pack *d_pack, char **argv)
 {
+	d_pack->is_dead = false;
 	d_pack->timestamp_in_ms = time_ms();
 	d_pack->n_philos = ft_atol(argv[INFO_PH_N_FILOS]);
 	d_pack->time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);

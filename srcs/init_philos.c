@@ -22,41 +22,54 @@ imprimes su muerte.
 
 */
 
+#define FORK_LEFT	"𐂐 has taken a fork L"
+#define FORK_RIGHT	"𐂐 has taken a fork R"
+#define EATING		"🍝 is eating"
+#define SLEEPING	"💤 is sleeping"
+#define THINKING	"💡 is thinking"
+
+void print_state(char *str, t_philo *philo)
+{
+	// if (philo->data->is_dead == true)
+	// 	return ;	
+	printf("[%5ld] [%3d]  %s\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo, str);
+}
+
 bool	philo_eat(t_philo	*philo)
-{	
+{
 	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
 		pthread_mutex_lock(philo->fork_left);
 	else
 		pthread_mutex_lock(philo->fork_right);
 	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
-		printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		print_state(FORK_LEFT, philo);
 	else
-		printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
-
+		print_state(FORK_RIGHT, philo);
 	if (philo->id_philo % 2 != 0)
 		pthread_mutex_lock(philo->fork_right);
 	else
 		pthread_mutex_lock(philo->fork_left);
 	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
-		printf("[%5ld] [%3d]  𐂐 has taken a fork R\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		print_state(FORK_RIGHT, philo);
 	else
-		printf("[%5ld] [%3d]  𐂐 has taken a fork L\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);	
+		print_state(FORK_LEFT, philo);
 	printf("\nTIEMPO DESDE LA ULTIMA COMIDA:%lu\n\n", time_ms()- philo->last_meal_start);
 
 	philo->last_meal_start =  time_ms();
-	printf("[%5ld] [%3d] 🍝 is eating\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	print_state(EATING, philo);
 	
 	if(wait_ms_and_check_life(philo->data->time_to_eat, philo) == DEAD)
 	{
-		printf("[%5ld] [%3d] 💀 is DEAD EATING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		print_state("💀 is DEAD EATING", philo);
 		pthread_mutex_unlock(philo->fork_left);
 		pthread_mutex_unlock(philo->fork_right);
 		return (DEAD);
 	}
-		pthread_mutex_unlock(philo->fork_left);
-		pthread_mutex_unlock(philo->fork_right);
+	pthread_mutex_unlock(philo->fork_left);
+	pthread_mutex_unlock(philo->fork_right);
 	return (LIVE);
 }
+
 //! EJEMPLO ARGS:
 //! ./philo | 4                      | 100         | 200         | 100           | 0
 //! ./philo | number_of_philosophers | time_to_die | time_to_eat | time_to_sleep | [number_of_times_each_philosopher_must_eat]
@@ -64,10 +77,10 @@ bool	philo_eat(t_philo	*philo)
 bool	philo_sleep(t_philo	*philo)
 {	
 	 // ◦ timestamp_in_ms X is sleeping
-	printf("[%5ld] [%3d] 💤 is sleeping\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	print_state(SLEEPING, philo);
 	if (wait_ms_and_check_life(philo->data->time_to_sleep, philo) == DEAD)
 	{
-		printf("[%5ld] [%3d] 💀 is DEAD SLEEPING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+		print_state("💀 is DEAD SLEEPING", philo);
 		return (DEAD);
 	}
 	return (LIVE);
@@ -75,7 +88,7 @@ bool	philo_sleep(t_philo	*philo)
 
 bool	philo_think(t_philo	*philo)
 {
-	printf("[%5ld] [%3d] 💡 is thinking\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+	print_state(THINKING, philo);
 	// ◦ timestamp_in_ms X is thinking
 	return (LIVE);
 }
@@ -91,14 +104,20 @@ void *philo_life(void *arg)
 	philo->last_meal_start = time_ms();
 	while(1)
 	{
+		if (philo->data->is_dead == true)
+			return (NULL);
 		if (philo_eat(philo) == DEAD)
 		{
 			return ((void *)DEAD);
 		}
+		if (philo->data->is_dead == true)
+			return (NULL);
 		if (philo_sleep(philo) == DEAD)
 		{
 			return ((void *)DEAD);
 		}
+		if (philo->data->is_dead == true)
+			return (NULL);
 		if (philo_think(philo) == DEAD)
 		{
 			return ((void *)DEAD);
@@ -116,12 +135,14 @@ void *philo_monitoring(void *arg)
 	philo = (t_philo*)arg;
 	while (1)
 	{
-		usleep(1000);
 		if (is_philo_live(philo) == DEAD)
 		{
-			printf("[%5ld] [%3d] 💀💻 is DEAD IN MONITORING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
+			if (philo->data->is_dead == true)
+				printf("[%5ld] [%3d] 💀💻 is DEAD IN MONITORING\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo);
 			return (DEAD);
 		}
+
+		usleep(1000);
 	}
 }
 

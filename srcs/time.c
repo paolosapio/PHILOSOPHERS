@@ -21,7 +21,10 @@ long    time_ms(void)
 bool	is_philo_live(t_philo	*philo)
 {
 	if (time_diff(philo->last_meal_start) > philo->data->time_to_die)
+	{
+		philo->data->is_dead = true;
 		return (DEAD);
+	}
 	return (LIVE);
 }
 
