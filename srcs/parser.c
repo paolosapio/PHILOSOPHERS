@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/03 15:15:51 by psapio            #+#    #+#             */
+/*   Updated: 2025/04/03 15:22:31 by psapio           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int traductor_char_to_token(char c)
+int	traductor_char_to_token(char c)
 {
 	if (c == '+')
 		return (CT___PLUS);
@@ -9,31 +21,24 @@ int traductor_char_to_token(char c)
 	return (CT__ERROR);
 }
 
-
-
-//! exeple arg: 123+ | -200 | 374  caca | ++36 | 35 |
-// install image_comment extension to see de image belove:
-// https://marketplace.visualstudio.com/items?itemName=mgiesen.image-comments
 // [../TO_IGNORE_reference_image/grafo_automata.png]
-// [../TO_IGNORE_reference_image/nature.jpg]
-int get_state(t_state current_state, int token_char)
+int	get_state(t_state current_state, int token_char)
 {
-	const t_state matrix[][4] = {
-		{ST___ERROR, ST____PLUS, ST__NUMBER}, // 0 estado inicial
-		{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
-		{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
-		{ST___ERROR, ST___ERROR, ST__NUMBER}  // 3 estado ST__NUMBER OK
-	};// |   err	|	  + 	|	 n     |
-	  // |    0		|	  1 	|	 2     |
+	const t_state	matrix[][4] = {
+	{ST___ERROR, ST____PLUS, ST__NUMBER}, // 0 estado inicial
+	{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
+	{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
+	{ST___ERROR, ST___ERROR, ST__NUMBER}, // 3 estado ST__NUMBER OK
+	};
+
 	return (matrix[current_state][token_char]);
 }
 
-
-int evaluate_string(char *str)
+int	evaluate_string(char *str)
 {
-	int token_char;
-	int state;
-	int i;
+	int	token_char;
+	int	state;
+	int	i;
 
 	state = ST_INICIAL;
 	i = 0;
@@ -51,11 +56,11 @@ int evaluate_string(char *str)
 	return (0);
 }
 
-int parser(int argc, char **argv)
+int	parser(int argc, char **argv)
 {
-	(void)argc;
-	int i;
+	int	i;
 
+	(void)argc;
 	i = 1;
 	while (argv[i])
 	{
@@ -63,5 +68,5 @@ int parser(int argc, char **argv)
 			return (ST___ERROR);
 		i++;
 	}
-	return (0); 
+	return (0);
 }

@@ -1,26 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_philos.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/03 14:57:52 by psapio            #+#    #+#             */
+/*   Updated: 2025/04/03 15:38:22 by psapio           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-/*
-
-EJECUCION DFEL HILO:
-hilo 1-> bloque porta, come un tiempo, apre puerta, duerme un tiempo, piensa (scrive mensaje), bloque porta, come...
-
-pensar tiene que escribir esto:
-abortCualquier cambio de estado de un filósofo debe tener el siguiente formato:
-
-◦ timestamp_in_ms X has taken a fork
-◦ timestamp_in_ms X is eating
-◦ timestamp_in_ms X is sleeping
-◦ timestamp_in_ms X is thinking
-◦ timestamp_in_ms X died
-
-Reemplaza timestamp_in_ms con la marca de tiempo actual en milisegundos
-y X con el numero del filósofo.
-• El estado impreso no debe estar roto o alterado por el estado de otros filósofos
-• No puedes tener más de 10ms entre la muerte de un filósofo y el momento en el que
-imprimes su muerte.
-• Te recuerdo, los filósofos deben evitar morir.
-
-*/
 
 #define FORK_LEFT	"🔱 has taken a fork L"
 #define FORK_RIGHT	"🔱 has taken a fork R"
@@ -28,17 +18,18 @@ imprimes su muerte.
 #define SLEEPING	"💤 is sleeping"
 #define THINKING	"💡 is thinking"
 
-void print_state(char *str, t_philo *philo)
+#define PRINT_STATE "[%5ld] [%3d] %s\n"
+
+void	print_state(char *str, t_philo *philo)
 {
-	//poner mutex para que no se cuelen dos hilos en la impressora
 	if (philo->data->is_dead == true)
-		return ;	
-	printf("[%5ld] [%3d] %s\n", time_diff(philo->data->timestamp_in_ms), philo->id_philo, str);
+		return ;
+	printf(PRINT_STATE, time_diff(philo->data->time_in_ms), philo->id, str);
 }
 
 void	philo_eat(t_philo *philo)
 {
-	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+	if (philo->id % 2 != 0)
 	{
 		pthread_mutex_lock(philo->fork_left);
 		print_state(FORK_LEFT, philo);
@@ -48,53 +39,44 @@ void	philo_eat(t_philo *philo)
 		pthread_mutex_lock(philo->fork_right);
 		print_state(FORK_RIGHT, philo);
 	}
-
-	if (philo->id_philo % 2 != 0) // si queda resta es IMPARES
+	if (philo->id % 2 != 0)
 	{
 		pthread_mutex_lock(philo->fork_right);
 		print_state(FORK_RIGHT, philo);
-	}	
+	}
 	else
 	{
 		pthread_mutex_lock(philo->fork_left);
 		print_state(FORK_LEFT, philo);
 	}
-	philo->last_meal_start =  time_ms();
+	philo->last_meal_start = time_ms();
 	print_state(EATING, philo);
+	philo->times_eat++;
+	printf("philo->times_eat %d\n", philo->times_eat);
 	wait_ms_and_check_life(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
-	return ; //puede ser DEAD or LIVE
 }
 
-//! EJEMPLO ARGS:
-//! ./philo | 4                      | 100         | 200         | 100           | 0
-//! ./philo | number_of_philosophers | time_to_die | time_to_eat | time_to_sleep | [number_of_times_each_philosopher_must_eat]
-//!								     ( time_de_vida)
-bool	philo_sleep(t_philo	*philo)
-{	
-	 // ◦ timestamp_in_ms X is sleeping
+bool	philo_sleep(t_philo *philo)
+{
 	print_state(SLEEPING, philo);
 	return (wait_ms_and_check_life(philo->data->time_to_sleep, philo));
 }
 
-bool	philo_think(t_philo	*philo)
+bool	philo_think(t_philo *philo)
 {
 	print_state(THINKING, philo);
-	// ◦ timestamp_in_ms X is thinking
 	return (LIVE);
 }
 
-// ◦ timestamp_in_ms X died
-
-
-void *philo_life(void *arg)
+void	*philo_life(void *arg)
 {
 	t_philo	*philo;
 
-	philo = (t_philo*)arg;
+	philo = (t_philo *)arg;
 	philo->last_meal_start = time_ms();
-	while(1)
+	while (1)
 	{
 		if (philo->data->is_dead)
 			return ((void *)DEAD);
@@ -108,14 +90,12 @@ void *philo_life(void *arg)
 	}
 	return ((void *)DEAD);
 }
-// usleep(10000 * philo->id_philo);
-// printf("Philo nº%d sitting\n", philo->id_philo);
 
-void *philo_monitoring(void *arg)
+void	*philo_monitoring(void *arg)
 {
 	t_philo	*philo;
 
-	philo = (t_philo*)arg;
+	philo = (t_philo *)arg;
 	while (1)
 	{
 		if (philo->data->is_dead)
@@ -126,25 +106,53 @@ void *philo_monitoring(void *arg)
 	}
 }
 
-void	init_philos(t_data_pack *d_pack)
+void	*check_eat_count(void *arg)
 {
-	
+	t_data_pack	*data;
+	int			i;
+	int			count_n_philo;
+
+	data = (t_data_pack *)arg;
+	while (1)
+	{
+		i = 0;
+		count_n_philo = 0;
+		while (i < data->n_philos)
+		{
+			if (data->philos[i].times_eat >= data->n_must_eat)
+				count_n_philo++;
+			i++;
+		}
+		usleep(10000);
+		if (count_n_philo == data->n_philos)
+			break ;
+	}
+	data->is_dead = true;
+	return (NULL);
+}
+
+void	init_philos(t_data_pack *data)
+{
 	long	i;
 
 	i = 0;
-	while (i < d_pack->n_philos)
+	while (i < data->n_philos)
 	{
-		pthread_create(&d_pack->array_of_philosophers[i].id_thread, NULL, philo_life, &d_pack->array_of_philosophers[i]);
-		pthread_create(&d_pack->array_of_philosophers[i].id_thread_monitoring, NULL, philo_monitoring, &d_pack->array_of_philosophers[i]);
+		pthread_create(&data->philos[i].id_thread, \
+			NULL, philo_life, &data->philos[i]);
+		pthread_create(&data->philos[i].id_thread_monitoring, \
+			NULL, philo_monitoring, &data->philos[i]);
 		i++;
 	}
+	if (data->n_must_eat != -1)
+		pthread_create(&data->id_thread_times_eat, NULL, check_eat_count, data);
 	i = 0;
-	while (i < d_pack->n_philos)
+	while (i < data->n_philos)
 	{
-		pthread_join(d_pack->array_of_philosophers[i].id_thread, NULL);
-		pthread_join(d_pack->array_of_philosophers[i].id_thread_monitoring, NULL);
+		pthread_join(data->philos[i].id_thread, NULL);
+		pthread_join(data->philos[i].id_thread_monitoring, NULL);
 		i++;
 	}
-
+	if (data->n_must_eat != -1)
+		pthread_join(data->id_thread_times_eat, NULL);
 }
-	

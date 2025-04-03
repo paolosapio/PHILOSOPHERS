@@ -6,6 +6,7 @@ CFLAGS	 =	-Wextra -Wall -Werror #-Wunreachable-code
 CFLAGS	+= -I incl
 CFLAGS	+= -O3
 
+#DEBUG	 =	-g3 -fsanitize=thread -pthread
 DEBUG	 =	-g3 -fsanitize=address
 
 CPPFLAGS =	-MMD
@@ -33,7 +34,7 @@ $(NAME): $(OBJS)
 
 objs/srcs/%.o: ./srcs/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
+	@$(CC) $(CPPFLAGS) $(DEBUG) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
 
 clean:
 	@rm -rf objs
