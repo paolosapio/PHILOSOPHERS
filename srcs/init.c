@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:03:22 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 15:32:07 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/03 16:26:50 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,6 @@ void	init_data(t_data_pack *d_pack, char **argv)
 		destroy_data(d_pack);
 	if (init_array_philo(d_pack) == -1)
 		destroy_data(d_pack);
+	pthread_mutex_init(&d_pack->mutex_eat, NULL);
+	pthread_mutex_init(&d_pack->mutex_dead, NULL);
 }

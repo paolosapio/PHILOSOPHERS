@@ -6,8 +6,8 @@ CFLAGS	 =	-Wextra -Wall -Werror #-Wunreachable-code
 CFLAGS	+= -I incl
 CFLAGS	+= -O3
 
-#DEBUG	 =	-g3 -fsanitize=thread -pthread
-DEBUG	 =	-g3 -fsanitize=address
+DEBUG	 =	-g3 -fsanitize=thread -pthread
+#DEBUG	 =	-g3 -fsanitize=address
 
 CPPFLAGS =	-MMD
 

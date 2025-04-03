@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:45:39 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 15:32:07 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/03 16:24:45 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_data_pack
 	pthread_t		id_thread_times_eat;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_dead;
+	pthread_mutex_t	mutex_eat;
 	t_philo			*philos;
 }	t_data_pack;
 

@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:57:52 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 15:38:22 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/03 17:35:59 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ void	philo_eat(t_philo *philo)
 	}
 	philo->last_meal_start = time_ms();
 	print_state(EATING, philo);
+	pthread_mutex_lock(&philo->data->mutex_eat);
 	philo->times_eat++;
-	printf("philo->times_eat %d\n", philo->times_eat);
+	pthread_mutex_unlock(&philo->data->mutex_eat);
+//	printf("philo->times_eat %d\n", philo->times_eat);
 	wait_ms_and_check_life(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
@@ -70,6 +72,20 @@ bool	philo_think(t_philo *philo)
 	return (LIVE);
 }
 
+
+
+void *check_is_dead(t_philo	*philo)
+{
+	pthread_mutex_lock(&philo->data->mutex_dead);
+	if (philo->data->is_dead)
+	{
+		pthread_mutex_unlock(&philo->data->mutex_dead);
+		return ((void *)DEAD);
+	}
+	pthread_mutex_unlock(&philo->data->mutex_dead);
+	return ((void *)LIVE);
+}
+
 void	*philo_life(void *arg)
 {
 	t_philo	*philo;
@@ -78,13 +94,13 @@ void	*philo_life(void *arg)
 	philo->last_meal_start = time_ms();
 	while (1)
 	{
-		if (philo->data->is_dead)
+		if (check_is_dead(philo) == (void *)DEAD)
 			return ((void *)DEAD);
 		philo_eat(philo);
-		if (philo->data->is_dead)
+		if (check_is_dead(philo) == (void *)DEAD)
 			return ((void *)DEAD);
 		philo_sleep(philo);
-		if (philo->data->is_dead)
+		if (check_is_dead(philo) == (void *)DEAD)
 			return ((void *)DEAD);
 		philo_think(philo);
 	}
@@ -119,15 +135,19 @@ void	*check_eat_count(void *arg)
 		count_n_philo = 0;
 		while (i < data->n_philos)
 		{
+			pthread_mutex_lock(&data->mutex_eat);
 			if (data->philos[i].times_eat >= data->n_must_eat)
 				count_n_philo++;
+			pthread_mutex_unlock(&data->mutex_eat);
 			i++;
 		}
 		usleep(10000);
 		if (count_n_philo == data->n_philos)
 			break ;
 	}
+	pthread_mutex_lock(&data->mutex_dead);
 	data->is_dead = true;
+	pthread_mutex_unlock(&data->mutex_dead);
 	return (NULL);
 }
 
