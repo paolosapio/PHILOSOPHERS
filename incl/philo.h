@@ -83,6 +83,9 @@ typedef struct s_data_pack
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_dead;
 	pthread_mutex_t	mutex_eat;
+	pthread_mutex_t	mutex_timesds;
+	pthread_mutex_t	mutex_time;
+	pthread_mutex_t	mutex_print;
 	t_philo			*philos;
 }	t_data_pack;
 
@@ -101,7 +104,7 @@ int			ft_isdigit(int c);
 long		ft_atol(const char *nptr);
 
 //init.c
-void		init_data(t_data_pack *d_pack, char **argv);
+bool		init_data(t_data_pack *d_pack, char **argv);
 int			init_array_forks(t_data_pack *d_pack);
 int			init_array_philo(t_data_pack *d_pack);
 

@@ -21,7 +21,8 @@ int	main(int argc, char **argv)
 		if (parser(argc, argv) == ST___ERROR)
 			return (ST___ERROR);
 		memset(&d_pack, 0, sizeof(t_data_pack));
-		init_data(&d_pack, argv);
+		if (init_data(&d_pack, argv) == DEAD)
+			return (1);
 		init_philos(&d_pack);
 		destroy_data(&d_pack);
 	}
@@ -32,3 +33,4 @@ int	main(int argc, char **argv)
 	}
 	return (0);
 }
+// se queda pillado: ./philo 7 410 300 200 7

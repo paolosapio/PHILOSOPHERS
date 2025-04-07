@@ -52,7 +52,14 @@ int	init_array_philo(t_data_pack *data)
 	return (0);
 }
 
-void	init_data(t_data_pack *d_pack, char **argv)
+bool	is_one_philo_dead(t_data_pack *d_pack)
+{
+	printf("[    1] [  1] 🔱 has taken a fork L\n");
+	usleep(d_pack->time_to_die * 1000);
+	printf("[%5ld] [  1] 💀 is DEAD\n", d_pack->time_to_die);
+	return (DEAD);
+}
+bool	init_data(t_data_pack *d_pack, char **argv)
 {
 	d_pack->is_dead = false;
 	d_pack->time_in_ms = time_ms();
@@ -62,11 +69,16 @@ void	init_data(t_data_pack *d_pack, char **argv)
 	d_pack->time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
 	d_pack->n_must_eat = -1;
 	if (argv[INFO_PH_N_PLATES])
-		d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
+	d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
+	if (d_pack->n_philos == 1)
+		return (is_one_philo_dead(d_pack));
 	if (init_array_forks(d_pack) == -1)
 		destroy_data(d_pack);
 	if (init_array_philo(d_pack) == -1)
 		destroy_data(d_pack);
 	pthread_mutex_init(&d_pack->mutex_eat, NULL);
 	pthread_mutex_init(&d_pack->mutex_dead, NULL);
+	pthread_mutex_init(&d_pack->mutex_time, NULL);
+	pthread_mutex_init(&d_pack->mutex_print, NULL);
+	return (LIVE);
 }

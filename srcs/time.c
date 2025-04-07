@@ -27,15 +27,23 @@ long	time_ms(void)
 
 bool	is_philo_live(t_philo *philo)
 {
+	long	time_difference;
+	long	time_to_die;
+
+	pthread_mutex_lock(&philo->data->mutex_time);
+	time_difference = time_diff(philo->last_meal_start);
+	pthread_mutex_unlock(&philo->data->mutex_time);
 	pthread_mutex_lock(&philo->data->mutex_dead);
-	if (time_diff(philo->last_meal_start) > philo->data->time_to_die)
+	time_to_die = philo->data->time_to_die;
+	pthread_mutex_unlock(&philo->data->mutex_dead);
+	if (time_difference > time_to_die)
 	{
 		print_state("💀 is DEAD", philo);
+		pthread_mutex_lock(&philo->data->mutex_dead);
 		philo->data->is_dead = true;
 		pthread_mutex_unlock(&philo->data->mutex_dead);
 		return (DEAD);
 	}
-	pthread_mutex_unlock(&philo->data->mutex_dead);
 	return (LIVE);
 }
 
@@ -43,17 +51,19 @@ bool	wait_ms_and_check_life(long time_wait, t_philo *philo)
 {
 	const long	time_now = time_ms();
 	const long	time_end = time_now + time_wait;
+	bool		is_dead;
+
 	while (1)
 	{
 		if (is_philo_live(philo) == DEAD)
 			return (DEAD);
+
 		pthread_mutex_lock(&philo->data->mutex_dead);
-		if (philo->data->is_dead)
-		{
-			pthread_mutex_unlock(&philo->data->mutex_dead);
-			return (DEAD);
-		}
+		is_dead = philo->data->is_dead;
 		pthread_mutex_unlock(&philo->data->mutex_dead);
+
+		if (is_dead)
+			return (DEAD);
 
 		if (time_ms() >= time_end)
 			break ;

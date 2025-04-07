@@ -32,4 +32,9 @@ void	destroy_data(t_data_pack *data)
 		free(data->philos);
 		data->philos = NULL;
 	}
+	//HACER DESTROY DE TODOS LOS MUTEX
+	pthread_mutex_destroy(&data->mutex_eat);
+	pthread_mutex_destroy(&data->mutex_dead);
+	pthread_mutex_destroy(&data->mutex_time);
+	pthread_mutex_destroy(&data->mutex_print);
 }

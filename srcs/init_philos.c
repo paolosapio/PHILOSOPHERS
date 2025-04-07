@@ -22,9 +22,15 @@
 
 void	print_state(char *str, t_philo *philo)
 {
-	if (philo->data->is_dead == true)
+	bool	is_dead;
+	pthread_mutex_lock(&philo->data->mutex_dead);
+	is_dead = philo->data->is_dead;
+	pthread_mutex_unlock(&philo->data->mutex_dead);
+	if (is_dead == true)
 		return ;
+	//pthread_mutex_lock(&philo->data->mutex_print);
 	printf(PRINT_STATE, time_diff(philo->data->time_in_ms), philo->id, str);
+	//pthread_mutex_unlock(&philo->data->mutex_print);
 }
 
 void	philo_eat(t_philo *philo)
@@ -49,7 +55,13 @@ void	philo_eat(t_philo *philo)
 		pthread_mutex_lock(philo->fork_left);
 		print_state(FORK_LEFT, philo);
 	}
+
+
+	pthread_mutex_lock(&philo->data->mutex_time);
 	philo->last_meal_start = time_ms();
+	pthread_mutex_unlock(&philo->data->mutex_time);
+
+
 	print_state(EATING, philo);
 	pthread_mutex_lock(&philo->data->mutex_eat);
 	philo->times_eat++;
@@ -76,13 +88,12 @@ bool	philo_think(t_philo *philo)
 
 void *check_is_dead(t_philo	*philo)
 {
+	bool is_dead;
 	pthread_mutex_lock(&philo->data->mutex_dead);
-	if (philo->data->is_dead)
-	{
-		pthread_mutex_unlock(&philo->data->mutex_dead);
-		return ((void *)DEAD);
-	}
+	is_dead = philo->data->is_dead;
 	pthread_mutex_unlock(&philo->data->mutex_dead);
+	if (is_dead)
+		return ((void *)DEAD);
 	return ((void *)LIVE);
 }
 
@@ -91,7 +102,7 @@ void	*philo_life(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	philo->last_meal_start = time_ms();
+	//philo->last_meal_start = time_ms();
 	while (1)
 	{
 		if (check_is_dead(philo) == (void *)DEAD)
@@ -110,11 +121,15 @@ void	*philo_life(void *arg)
 void	*philo_monitoring(void *arg)
 {
 	t_philo	*philo;
+	bool	is_dead;
 
 	philo = (t_philo *)arg;
 	while (1)
 	{
-		if (philo->data->is_dead)
+		pthread_mutex_lock(&philo->data->mutex_dead);
+		is_dead = philo->data->is_dead;
+		pthread_mutex_unlock(&philo->data->mutex_dead);
+		if (is_dead)
 			return (DEAD);
 		if (is_philo_live(philo) == DEAD)
 			return (DEAD);
@@ -127,6 +142,8 @@ void	*check_eat_count(void *arg)
 	t_data_pack	*data;
 	int			i;
 	int			count_n_philo;
+	int			times_eat;
+	long		n_must_eat;
 
 	data = (t_data_pack *)arg;
 	while (1)
@@ -136,18 +153,23 @@ void	*check_eat_count(void *arg)
 		while (i < data->n_philos)
 		{
 			pthread_mutex_lock(&data->mutex_eat);
-			if (data->philos[i].times_eat >= data->n_must_eat)
-				count_n_philo++;
+			times_eat = data->philos[i].times_eat;
+			n_must_eat = data->n_must_eat;
 			pthread_mutex_unlock(&data->mutex_eat);
+
+			if (times_eat >= n_must_eat)
+				count_n_philo++;
 			i++;
 		}
 		usleep(10000);
 		if (count_n_philo == data->n_philos)
 			break ;
 	}
+
 	pthread_mutex_lock(&data->mutex_dead);
 	data->is_dead = true;
 	pthread_mutex_unlock(&data->mutex_dead);
+
 	return (NULL);
 }
 
