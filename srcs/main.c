@@ -18,7 +18,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 5 || argc == 6)
 	{
-		if (parser(argc, argv) == ST___ERROR)
+		if (parser(argv) == ST___ERROR)
 			return (ST___ERROR);
 		memset(&d_pack, 0, sizeof(t_data_pack));
 		if (init_data(&d_pack, argv) == DEAD)

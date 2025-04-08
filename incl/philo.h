@@ -21,9 +21,6 @@
 # include <stdlib.h>
 # include <string.h>
 
-# define LIVE true
-# define DEAD false
-
 //! ////////////////////////ENUM////////////////////////
 
 typedef enum e_char_token
@@ -68,7 +65,10 @@ typedef struct s_philo
 	int				times_eat;
 }	t_philo;
 
-// structura con todos los datos
+// structura con todos los datos e define per la variable bool
+# define LIVE true
+# define DEAD false
+
 typedef struct s_data_pack
 {
 	bool			is_dead;
@@ -94,7 +94,7 @@ typedef struct s_data_pack
 int			traductor_char_to_token(char c);
 int			get_state(t_state current_state, int token_char);
 int			evaluate_string(char *str);
-int			parser(int argc, char **argv);
+int			parser(char **argv);
 
 //utils.c
 long		ft_atol(const char *nptr);

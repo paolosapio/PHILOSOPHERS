@@ -29,6 +29,7 @@ int	get_state(t_state current_state, int token_char)
 	{ST___ERROR, ST___ERROR, ST___ERROR}, // 1 estado ST___ERROR
 	{ST___ERROR, ST___ERROR, ST__NUMBER}, // 2 estado ST____PLUS NO ACEPTACION
 	{ST___ERROR, ST___ERROR, ST__NUMBER}, // 3 estado ST__NUMBER OK
+	{NULL}//0		+			nbr
 	};
 
 	return (matrix[current_state][token_char]);
@@ -56,11 +57,10 @@ int	evaluate_string(char *str)
 	return (0);
 }
 
-int	parser(int argc, char **argv)
+int	parser(char **argv)
 {
 	int	i;
 
-	(void)argc;
 	i = 1;
 	while (argv[i])
 	{
