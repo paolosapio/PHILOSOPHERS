@@ -62,7 +62,6 @@ typedef struct s_philo
 	int				id;
 	long			last_meal_start;
 	pthread_t		id_thread;
-	pthread_t		id_thread_monitoring;
 	t_data_pack		*data;
 	pthread_mutex_t	*fork_left;
 	pthread_mutex_t	*fork_right;
@@ -80,6 +79,7 @@ typedef struct s_data_pack
 	long			time_in_ms;
 	long			n_philos;
 	pthread_t		id_thread_times_eat;
+	pthread_t		id_thread_monitoring;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_dead;
 	pthread_mutex_t	mutex_eat;

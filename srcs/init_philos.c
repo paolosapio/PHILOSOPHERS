@@ -64,7 +64,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutex_eat);
 	philo->times_eat++;
 	pthread_mutex_unlock(&philo->data->mutex_eat);
-//	printf("philo->times_eat %d\n", philo->times_eat);
+	// printf("philo->times_eat %d\n", philo->times_eat);
 	wait_ms_and_check_life(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
@@ -100,7 +100,7 @@ void	*philo_life(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	//philo->last_meal_start = time_ms();
+	philo->last_meal_start = time_ms();
 	while (1)
 	{
 		if (check_is_dead(philo) == (void *)DEAD)
@@ -114,6 +114,31 @@ void	*philo_life(void *arg)
 		philo_think(philo);
 	}
 	return ((void *)DEAD);
+}
+
+void	*philo_monitoring_all(void *arg)
+{
+	t_data_pack	*data;
+	bool	is_dead;
+	int		i;
+	
+	data = (t_data_pack *)arg;
+	while (1)
+	{
+		pthread_mutex_lock(&data->mutex_dead);
+		is_dead = data->is_dead;
+		pthread_mutex_unlock(&data->mutex_dead);
+		if (is_dead)
+			return (DEAD);
+		i = 0;
+		while (i < data->n_philos)
+		{
+			if (is_philo_live(&data->philos[i]) == DEAD)
+				return (DEAD);
+			i++;
+		}
+		usleep(100);
+	}
 }
 
 void	*philo_monitoring(void *arg)
@@ -144,6 +169,9 @@ void	*check_eat_count(void *arg)
 	long		n_must_eat;
 
 	data = (t_data_pack *)arg;
+	pthread_mutex_lock(&data->mutex_eat);
+	n_must_eat = data->n_must_eat;
+	pthread_mutex_unlock(&data->mutex_eat);
 	while (1)
 	{
 		i = 0;
@@ -152,7 +180,6 @@ void	*check_eat_count(void *arg)
 		{
 			pthread_mutex_lock(&data->mutex_eat);
 			times_eat = data->philos[i].times_eat;
-			n_must_eat = data->n_must_eat;
 			pthread_mutex_unlock(&data->mutex_eat);
 
 			if (times_eat >= n_must_eat)
@@ -163,7 +190,6 @@ void	*check_eat_count(void *arg)
 		if (count_n_philo == data->n_philos)
 			break ;
 	}
-
 	pthread_mutex_lock(&data->mutex_dead);
 	data->is_dead = true;
 	pthread_mutex_unlock(&data->mutex_dead);
@@ -179,18 +205,18 @@ void	init_philos(t_data_pack *data)
 	while (i < data->n_philos)
 	{
 		pthread_create(&data->philos[i].id_thread, NULL, philo_life, &data->philos[i]);
-		pthread_create(&data->philos[i].id_thread_monitoring, NULL, philo_monitoring, &data->philos[i]);
 		i++;
 	}
+	pthread_create(&data->id_thread_monitoring, NULL, philo_monitoring_all, data);
 	if (data->n_must_eat != -1)
 		pthread_create(&data->id_thread_times_eat, NULL, check_eat_count, data);
 	i = 0;
 	while (i < data->n_philos)
 	{
 		pthread_join(data->philos[i].id_thread, NULL);
-		pthread_join(data->philos[i].id_thread_monitoring, NULL);
 		i++;
 	}
+	pthread_join(data->id_thread_monitoring, NULL);
 	if (data->n_must_eat != -1)
 		pthread_join(data->id_thread_times_eat, NULL);
 }
