@@ -83,7 +83,6 @@ typedef struct s_data_pack
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_dead;
 	pthread_mutex_t	mutex_eat;
-	pthread_mutex_t	mutex_timesds;
 	pthread_mutex_t	mutex_time;
 	pthread_mutex_t	mutex_print;
 	t_philo			*philos;

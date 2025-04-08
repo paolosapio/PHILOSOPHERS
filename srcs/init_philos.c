@@ -28,9 +28,9 @@ void	print_state(char *str, t_philo *philo)
 	pthread_mutex_unlock(&philo->data->mutex_dead);
 	if (is_dead == true)
 		return ;
-	//pthread_mutex_lock(&philo->data->mutex_print);
+	pthread_mutex_lock(&philo->data->mutex_print);
 	printf(PRINT_STATE, time_diff(philo->data->time_in_ms), philo->id, str);
-	//pthread_mutex_unlock(&philo->data->mutex_print);
+	pthread_mutex_unlock(&philo->data->mutex_print);
 }
 
 void	philo_eat(t_philo *philo)
@@ -55,8 +55,6 @@ void	philo_eat(t_philo *philo)
 		pthread_mutex_lock(philo->fork_left);
 		print_state(FORK_LEFT, philo);
 	}
-
-
 	pthread_mutex_lock(&philo->data->mutex_time);
 	philo->last_meal_start = time_ms();
 	pthread_mutex_unlock(&philo->data->mutex_time);
@@ -180,10 +178,8 @@ void	init_philos(t_data_pack *data)
 	i = 0;
 	while (i < data->n_philos)
 	{
-		pthread_create(&data->philos[i].id_thread, \
-			NULL, philo_life, &data->philos[i]);
-		pthread_create(&data->philos[i].id_thread_monitoring, \
-			NULL, philo_monitoring, &data->philos[i]);
+		pthread_create(&data->philos[i].id_thread, NULL, philo_life, &data->philos[i]);
+		pthread_create(&data->philos[i].id_thread_monitoring, NULL, philo_monitoring, &data->philos[i]);
 		i++;
 	}
 	if (data->n_must_eat != -1)
