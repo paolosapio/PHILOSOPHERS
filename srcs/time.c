@@ -51,18 +51,17 @@ bool	wait_ms_and_check_life(long time_wait, t_philo *philo)
 {
 	const long	time_now = time_ms();
 	const long	time_end = time_now + time_wait;
-	bool		is_dead;
 
 	while (1)
 	{
+		// pthread_mutex_lock(&philo->data->mutex_dead);
 		if (is_philo_live(philo) == DEAD)
+		{
+			// pthread_mutex_unlock(&philo->data->mutex_dead);
 			return (DEAD);
-
-		pthread_mutex_lock(&philo->data->mutex_dead);
-		is_dead = philo->data->is_dead;
-		pthread_mutex_unlock(&philo->data->mutex_dead);
-
-		if (is_dead)
+		}
+		// pthread_mutex_unlock(&philo->data->mutex_dead);
+		if (get_data_is_dead_protect(philo->data) == true)
 			return (DEAD);
 
 		if (time_ms() >= time_end)

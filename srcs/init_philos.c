@@ -20,13 +20,19 @@
 
 #define PRINT_STATE "[%5ld] [%3d] %s\n"
 
-void	print_state(char *str, t_philo *philo)
+bool	get_data_is_dead_protect(t_data_pack *data)
 {
 	bool	is_dead;
-	pthread_mutex_lock(&philo->data->mutex_dead);
-	is_dead = philo->data->is_dead;
-	pthread_mutex_unlock(&philo->data->mutex_dead);
-	if (is_dead == true)
+
+	pthread_mutex_lock(&data->mutex_dead);
+	is_dead = data->is_dead;
+	pthread_mutex_unlock(&data->mutex_dead);
+	return (is_dead);
+}
+
+void	print_state(char *str, t_philo *philo)
+{
+	if (get_data_is_dead_protect(philo->data) == true)
 		return ;
 	pthread_mutex_lock(&philo->data->mutex_print);
 	printf(PRINT_STATE, time_diff(philo->data->time_in_ms), philo->id, str);
@@ -160,6 +166,7 @@ void	*philo_monitoring(void *arg)
 	}
 }
 
+
 void	*check_eat_count(void *arg)
 {
 	t_data_pack	*data;
@@ -187,13 +194,12 @@ void	*check_eat_count(void *arg)
 			i++;
 		}
 		usleep(10000);
-		if (count_n_philo == data->n_philos)
+		if (count_n_philo == data->n_philos || get_data_is_dead_protect(data) == true)
 			break ;
 	}
 	pthread_mutex_lock(&data->mutex_dead);
 	data->is_dead = true;
 	pthread_mutex_unlock(&data->mutex_dead);
-
 	return (NULL);
 }
 
