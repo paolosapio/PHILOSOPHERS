@@ -32,9 +32,12 @@ bool	get_data_is_dead_protect(t_data_pack *data)
 
 void	print_state(char *str, t_philo *philo)
 {
-	if (get_data_is_dead_protect(philo->data) == true)
-		return ;
 	pthread_mutex_lock(&philo->data->mutex_print);
+	if (get_data_is_dead_protect(philo->data) == true)
+	{
+		pthread_mutex_unlock(&philo->data->mutex_print);
+		return ;
+	}
 	printf(PRINT_STATE, time_diff(philo->data->time_in_ms), philo->id, str);
 	pthread_mutex_unlock(&philo->data->mutex_print);
 }
@@ -97,7 +100,9 @@ void *check_is_dead(t_philo	*philo)
 	is_dead = philo->data->is_dead;
 	pthread_mutex_unlock(&philo->data->mutex_dead);
 	if (is_dead)
+	{
 		return ((void *)DEAD);
+	}
 	return ((void *)LIVE);
 }
 
@@ -135,7 +140,9 @@ void	*philo_monitoring_all(void *arg)
 		is_dead = data->is_dead;
 		pthread_mutex_unlock(&data->mutex_dead);
 		if (is_dead)
+		{
 			return (DEAD);
+		}
 		i = 0;
 		while (i < data->n_philos)
 		{

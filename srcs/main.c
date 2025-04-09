@@ -34,3 +34,7 @@ int	main(int argc, char **argv)
 	return (0);
 }
 // se queda pillado: ./philo 7 410 300 200 7
+
+//./philo 200 1010 300 300 imprime demasiado despues de morirse!
+
+// ./philo 3 400 103 103 esto es el tiempo limite tiene que funcionar!!

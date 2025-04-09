@@ -36,14 +36,17 @@ bool	is_philo_live(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutex_dead);
 	time_to_die = philo->data->time_to_die;
 	pthread_mutex_unlock(&philo->data->mutex_dead);
+	pthread_mutex_lock(&philo->data->mutex_time);
 	if (time_difference > time_to_die)
 	{
 		print_state("💀 is DEAD", philo);
 		pthread_mutex_lock(&philo->data->mutex_dead);
 		philo->data->is_dead = true;
 		pthread_mutex_unlock(&philo->data->mutex_dead);
+		pthread_mutex_unlock(&philo->data->mutex_time);
 		return (DEAD);
 	}
+	pthread_mutex_unlock(&philo->data->mutex_time);
 	return (LIVE);
 }
 
