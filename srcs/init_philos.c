@@ -44,26 +44,26 @@ void	print_state(char *str, t_philo *philo)
 
 void	philo_eat(t_philo *philo)
 {
-	if (philo->id % 2 != 0)
-	{
-		pthread_mutex_lock(philo->fork_left);
-		print_state(FORK_LEFT, philo);
-	}
-	else
-	{
-		pthread_mutex_lock(philo->fork_right);
-		print_state(FORK_RIGHT, philo);
-	}
-	if (philo->id % 2 != 0)
-	{
-		pthread_mutex_lock(philo->fork_right);
-		print_state(FORK_RIGHT, philo);
-	}
-	else
-	{
-		pthread_mutex_lock(philo->fork_left);
-		print_state(FORK_LEFT, philo);
-	}
+	pthread_mutex_lock(philo->fork_left);
+	print_state(FORK_LEFT, philo);
+	// if (philo->id % 2 == 1)
+	// {
+	// }
+	pthread_mutex_lock(philo->fork_right);
+	print_state(FORK_RIGHT, philo);
+	// else
+	// {
+	// }
+	// if (philo->id % 2 == 1)
+	// {
+	// 	pthread_mutex_lock(philo->fork_right);
+	// 	print_state(FORK_RIGHT, philo);
+	// }
+	// else
+	// {
+	// 	pthread_mutex_lock(philo->fork_left);
+	// 	print_state(FORK_LEFT, philo);
+	// }
 	pthread_mutex_lock(&philo->data->mutex_time);
 	philo->last_meal_start = time_ms();
 	pthread_mutex_unlock(&philo->data->mutex_time);
@@ -111,6 +111,8 @@ void	*philo_life(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->id % 2 == 1)
+		usleep(500);
 	philo->last_meal_start = time_ms();
 	while (1)
 	{

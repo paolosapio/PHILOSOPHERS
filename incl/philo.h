@@ -56,13 +56,13 @@ typedef struct s_philo		t_philo;
 // lista de filosofos
 typedef struct s_philo
 {
+	volatile long	last_meal_start;
+	volatile int	times_eat;
 	int				id;
-	long			last_meal_start;
 	pthread_t		id_thread;
 	t_data_pack		*data;
 	pthread_mutex_t	*fork_left;
 	pthread_mutex_t	*fork_right;
-	int				times_eat;
 }	t_philo;
 
 // structura con todos los datos e define per la variable bool
@@ -71,12 +71,12 @@ typedef struct s_philo
 
 typedef struct s_data_pack
 {
-	bool			is_dead;
+	volatile bool	is_dead;
+	volatile long	time_in_ms;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			n_must_eat;
-	long			time_in_ms;
 	long			n_philos;
 	pthread_t		id_thread_times_eat;
 	pthread_t		id_thread_monitoring;
