@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:03:22 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 16:26:50 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/10 19:40:16 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ bool	is_one_philo_dead(t_data_pack *d_pack)
 	printf("[%5ld] [  1] 💀 is DEAD\n", d_pack->time_to_die);
 	return (DEAD);
 }
+
 bool	init_data(t_data_pack *d_pack, char **argv)
 {
 	d_pack->is_dead = false;
@@ -69,7 +70,7 @@ bool	init_data(t_data_pack *d_pack, char **argv)
 	d_pack->time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
 	d_pack->n_must_eat = -1;
 	if (argv[INFO_PH_N_PLATES])
-	d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
+		d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);
 	if (d_pack->n_philos == 1)
 		return (is_one_philo_dead(d_pack));
 	if (init_array_forks(d_pack) == -1)

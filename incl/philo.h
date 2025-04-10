@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:45:39 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 16:24:45 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/10 20:15:48 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@
 # include <sys/time.h>
 # include <stdlib.h>
 # include <string.h>
+
+//! ////////////////////////DEFINES/////////////////////
+
+# define FORK_LEFT	"🔱 has taken a fork L"
+# define FORK_RIGHT	"🔱 has taken a fork R"
+# define EATING		"🍝 is eating"
+# define SLEEPING	"💤 is sleeping"
+# define THINKING	"💡 is thinking"
+
+# define PRINT_STATE "[%5ld] [%3d] %s\n"
 
 //! ////////////////////////ENUM////////////////////////
 
@@ -92,8 +102,8 @@ typedef struct s_data_pack
 
 //parser.c
 int			traductor_char_to_token(char c);
-int			get_state(t_state current_state, int token_char);
-int			evaluate_string(char *str);
+t_state		get_state(t_state current_state, int token_char);
+t_state		evaluate_string(char *str);
 int			parser(char **argv);
 
 //utils.c
@@ -125,5 +135,12 @@ long		time_ms(void);
 bool		wait_ms_and_check_life(long time_wait, t_philo	*philo);
 bool		is_philo_live(t_philo	*philo);
 long		time_diff(long time_in_ms);
+
+//rutines.c
+void		*philo_life(void *arg);
+
+//dead_monitoring.c
+void		*philo_monitoring_all(void *arg);
+void		*eat_monitoring(void *arg);
 
 #endif

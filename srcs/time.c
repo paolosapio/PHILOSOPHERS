@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:54:09 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 16:37:57 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/10 19:40:53 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,10 @@ bool	wait_ms_and_check_life(long time_wait, t_philo *philo)
 
 	while (1)
 	{
-		// pthread_mutex_lock(&philo->data->mutex_dead);
 		if (is_philo_live(philo) == DEAD)
-		{
-			// pthread_mutex_unlock(&philo->data->mutex_dead);
 			return (DEAD);
-		}
-		// pthread_mutex_unlock(&philo->data->mutex_dead);
 		if (get_data_is_dead_protect(philo->data) == true)
 			return (DEAD);
-
 		if (time_ms() >= time_end)
 			break ;
 		usleep(100);

@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:09:45 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/03 15:32:07 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/10 19:38:37 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	destroy_data(t_data_pack *data)
 		free(data->philos);
 		data->philos = NULL;
 	}
-	//HACER DESTROY DE TODOS LOS MUTEX
 	pthread_mutex_destroy(&data->mutex_eat);
 	pthread_mutex_destroy(&data->mutex_dead);
 	pthread_mutex_destroy(&data->mutex_time);

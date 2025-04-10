@@ -22,7 +22,7 @@ int	traductor_char_to_token(char c)
 }
 
 // [../TO_IGNORE_reference_image/grafo_automata.png]
-int	get_state(t_state current_state, int token_char)
+t_state	get_state(t_state current_state, int token_char)
 {
 	const t_state	matrix[][4] = {
 	{ST___ERROR, ST____PLUS, ST__NUMBER}, // 0 estado inicial
@@ -35,11 +35,11 @@ int	get_state(t_state current_state, int token_char)
 	return (matrix[current_state][token_char]);
 }
 
-int	evaluate_string(char *str)
+t_state	evaluate_string(char *str)
 {
-	int	token_char;
-	int	state;
-	int	i;
+	int		token_char;
+	t_state	state;
+	int		i;
 
 	state = ST_INICIAL;
 	i = 0;
@@ -54,7 +54,7 @@ int	evaluate_string(char *str)
 		printf("Error, invalid input: %s\n", str);
 		return (ST___ERROR);
 	}
-	return (0);
+	return (state);
 }
 
 int	parser(char **argv)

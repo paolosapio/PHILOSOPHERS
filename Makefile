@@ -6,7 +6,7 @@ CFLAGS	 =	-Wextra -Wall -Werror #-Wunreachable-code
 CFLAGS	+= -I incl
 CFLAGS	+= -O3
 
-# DEBUG	 =	-g3 -fsanitize=thread -pthread
+DEBUG	 =	-g3 -fsanitize=thread -pthread
 #DEBUG	 =	-g3 -fsanitize=address
 
 CPPFLAGS =	-MMD
@@ -21,6 +21,8 @@ SRCS =							\
 		srcs/destroy_data.c		\
 		srcs/init_philos.c		\
 		srcs/time.c				\
+		srcs/rutines.c			\
+		srcs/dead_monitoring.c	\
 
 
 
