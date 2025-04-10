@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:10:22 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/10 20:18:10 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/10 21:00:28 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,5 @@ int	main(int argc, char **argv)
 
 // ./philo 3 400 103 103 esto es el tiempo limite tiene que funcionar!!
 // ./philo 3 300 99 99
+
+// ./philo 3 300 99 99 muere y no debe
