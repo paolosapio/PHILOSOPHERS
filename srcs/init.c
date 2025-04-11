@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:03:22 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/10 19:40:16 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/11 16:51:18 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ bool	init_data(t_data_pack *d_pack, char **argv)
 	d_pack->time_to_die = ft_atol(argv[INFO_PH_TIME_LIFE]);
 	d_pack->time_to_eat = ft_atol(argv[INFO_PH_TIME_EAT]);
 	d_pack->time_to_sleep = ft_atol(argv[INFO_PH_TIME_SLEEP]);
+	if (d_pack->n_philos == 0 || d_pack->time_to_die == 0
+		|| d_pack->time_to_eat == 0 || d_pack->time_to_sleep == 0)
+	{
+		return (DEAD);
+	}
 	d_pack->n_must_eat = -1;
 	if (argv[INFO_PH_N_PLATES])
 		d_pack->n_must_eat = ft_atol(argv[INFO_PH_N_PLATES]);

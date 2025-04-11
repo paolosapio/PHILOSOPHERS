@@ -6,7 +6,7 @@
 /*   By: psapio <psapio@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:46:45 by psapio            #+#    #+#             */
-/*   Updated: 2025/04/10 20:57:16 by psapio           ###   ########.fr       */
+/*   Updated: 2025/04/11 16:38:05 by psapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	*check_is_dead(t_philo	*philo)
 
 void	philo_eat(t_philo *philo)
 {
-	if (philo->id != philo->data->n_philos)
+	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(philo->fork_right);
 		print_state(FORK_RIGHT, philo);
@@ -35,16 +35,15 @@ void	philo_eat(t_philo *philo)
 	}
 	else
 	{
+		usleep(200);
 		pthread_mutex_lock(philo->fork_left);
 		print_state(FORK_LEFT, philo);
 		pthread_mutex_lock(philo->fork_right);
 		print_state(FORK_RIGHT, philo);
 	}
-	
 	pthread_mutex_lock(&philo->data->mutex_time);
 	philo->last_meal_start = time_ms();
 	pthread_mutex_unlock(&philo->data->mutex_time);
-	
 	print_state(EATING, philo);
 	pthread_mutex_lock(&philo->data->mutex_eat);
 	philo->times_eat++;
